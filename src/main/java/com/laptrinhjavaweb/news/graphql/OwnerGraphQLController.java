@@ -39,7 +39,7 @@ public class OwnerGraphQLController {
 
         return OwnerService.createOwner(Owner);
     }
-
+ // ok
     @MutationMapping
     public OwnerDocument ownerLogin(@Argument String email, @Argument String password) {
         return authenticationService.login(email, password);
