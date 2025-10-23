@@ -1,0 +1,65 @@
+type Owner {
+    _id: ID
+    unique_id: String
+    name: String
+    email: String
+    password: String
+    image: String
+    firstName: String
+    lastName: String
+    phoneNumber: String
+    isActive: Boolean
+    userType: String
+    restaurants: [Restaurant]
+    permissions: [String]
+}
+
+type RestaurantByOwner {
+    _id: String
+    orderId: String
+    name: String
+    image: String
+    address: String
+}
+
+type OwnerLoginResponse {
+    userId: String
+    name: String
+    email: String
+    token: String
+    phoneNumber: String
+    userType: String
+    permissions : [String]
+    restaurants: [RestaurantByOwner]
+    userTypeId: String
+    image : String
+}
+
+input VendorInput {
+    _id: String
+    name: String
+    email: String
+    password: String
+    image: String
+    firstName: String
+    lastName: String
+    phoneNumber: String
+
+}
+
+type VendorResponse {
+    _id: String
+    email: String
+    userType: String
+    restaurants: [Restaurant]
+}
+
+extend type Mutation {
+    createVendor(vendorInput: VendorInput): Owner
+    ownerLogin(email: String!, password: String!): OwnerLoginResponse
+}
+extend type Query {
+    # Lấy danh sách tất cả vendor
+    vendors: [Owner]
+    restaurantByOwner(id: String): VendorResponse
+}

@@ -1,0 +1,7 @@
+type ImageResponse {
+    imageUrl: String
+}
+
+extend type Mutation {
+    uploadImageToS3(image: String!): ImageResponse
+}

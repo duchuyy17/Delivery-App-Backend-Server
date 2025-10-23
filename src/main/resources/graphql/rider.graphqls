@@ -1,0 +1,20 @@
+type Zone {
+    _id: ID
+    title: String
+}
+
+type Rider {
+    _id: ID
+    name: String
+    username: String
+    password: String
+    phone: String
+    available: Boolean
+    vehicleType: String
+    assigned: [String]
+    zone: Zone
+}
+
+extend type Query {
+    riders: [Rider]
+}

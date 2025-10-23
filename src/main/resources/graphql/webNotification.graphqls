@@ -1,0 +1,11 @@
+type WebNotification {
+    _id: ID
+    body: String
+    navigateTo: String
+    read: Boolean
+    createdAt: String
+}
+
+extend type Query {
+    webNotifications: [WebNotification]
+}

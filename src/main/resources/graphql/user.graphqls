@@ -1,0 +1,24 @@
+type User {
+    id: ID!
+    userName: String!
+    password: String
+    fullName: String
+    email: String
+    imgUrl: String
+    status: Int
+    phone: String
+    resetPasswordToken: String
+    dateOfBirth: String
+}
+extend type Mutation {
+    createUser(input: CreateUserInput!): User
+}
+input CreateUserInput {
+    userName: String!
+    password: String!
+    fullName: String
+    email: String
+    phone: String
+    imgUrl: String
+    status: Int
+}

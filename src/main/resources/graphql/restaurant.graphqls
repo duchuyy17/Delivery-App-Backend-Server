@@ -1,0 +1,90 @@
+type Point {
+    coordinates: [Float]
+
+}
+
+type OwnerRestaurant {
+    _id: ID
+    email: String
+    isActive: Boolean
+
+}
+
+type Restaurant {
+    _id: ID
+    name: String
+    image: String
+    username: String
+    orderPrefix: String
+    slug: String
+    phone: String
+    address: String
+    deliveryTime: Int
+    deliveryInfo: DeliveryInfo
+    openingTimes : OpeningTimes
+    minimumOrder: Int
+    isActive: Boolean
+    commissionRate: Float
+    tax: Float
+    owner: OwnerRestaurant
+    shopType: String
+    orderId: Int
+    logo: String
+    password: String
+    location: Point
+    cuisines: [String]
+    unique_restaurant_id : String
+}
+type DeliveryInfo{
+    minDeliveryFee : Int
+    deliveryDistance : Float
+    deliveryFee : Int
+
+}
+type OpeningTimes {
+    day : String
+    times : Timings
+}
+type Timings {
+    startTime : [Int]
+    endTime : [Int]
+}
+type RestaurantPaginationResponse {
+    data: [Restaurant]
+    currentPage: Int
+    totalPages: Int
+    totalCount: Int
+}
+
+input PointInput {
+    coordinates: [Float]
+}
+
+input RestaurantInput {
+    name: String
+    image: String
+    username: String
+    orderPrefix: String
+    slug: String
+    phone: String
+    address: String
+    deliveryTime: Int
+    minimumOrder: Int
+    isActive: Boolean
+    commissionRate: Float
+    tax: Float
+    shopType: String
+    orderId: Int
+    logo: String
+    password: String
+    location: PointInput
+    cuisines: [String]
+}
+
+extend type Mutation {
+    createRestaurant(restaurant: RestaurantInput!, owner: ID!): Restaurant
+}
+# 🟢 Thêm phần Query mới
+extend type Query {
+    restaurantsPaginated(page: Int, limit: Int , search : String): RestaurantPaginationResponse
+}

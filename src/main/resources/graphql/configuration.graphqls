@@ -1,0 +1,137 @@
+type Configuration {
+    _id: ID
+    email: String
+    emailName: String
+    password: String
+    enableEmail: Boolean
+    clientId: String
+    clientSecret: String
+    sandbox: Boolean
+    publishableKey: String
+    secretKey: String
+    currency: String
+    currencySymbol: String
+    deliveryRate: Float
+    twilioAccountSid: String
+    twilioAuthToken: String
+    twilioPhoneNumber: String
+    twilioEnabled: Boolean
+    formEmail: String
+    sendGridApiKey: String
+    sendGridEnabled: Boolean
+    sendGridEmail: String
+    sendGridEmailName: String
+    sendGridPassword: String
+    dashboardSentryUrl: String
+    webSentryUrl: String
+    apiSentryUrl: String
+    customerAppSentryUrl: String
+    restaurantAppSentryUrl: String
+    riderAppSentryUrl: String
+    googleApiKey: String
+    cloudinaryUploadUrl: String
+    cloudinaryApiKey: String
+    webAmplitudeApiKey: String
+    appAmplitudeApiKey: String
+    webClientID: String
+    androidClientID: String
+    iOSClientID: String
+    expoClientID: String
+    googleMapLibraries: String
+    googleColor: String
+    termsAndConditions: String
+    privacyPolicy: String
+    testOtp: String
+    firebaseKey: String
+    authDomain: String
+    projectId: String
+    storageBucket: String
+    msgSenderId: String
+    appId: String
+    measurementId: String
+    isPaidVersion: Boolean
+    skipEmailVerification: Boolean
+    skipMobileVerification: Boolean
+    costType: String
+    vapidKey: String
+}
+
+input ConfigurationInput {
+    email: String
+    emailName: String
+    password: String
+    enableEmail: Boolean
+
+    clientId: String
+    clientSecret: String
+    sandbox: Boolean
+
+    publishableKey: String
+    secretKey: String
+
+    currency: String
+    currencySymbol: String
+
+    deliveryRate: Float
+
+    twilioAccountSid: String
+    twilioAuthToken: String
+    twilioPhoneNumber: String
+    twilioEnabled: Boolean
+
+    formEmail: String
+    sendGridApiKey: String
+    sendGridEnabled: Boolean
+    sendGridEmail: String
+    sendGridEmailName: String
+    sendGridPassword: String
+
+    dashboardSentryUrl: String
+    webSentryUrl: String
+    apiSentryUrl: String
+    customerAppSentryUrl: String
+    restaurantAppSentryUrl: String
+    riderAppSentryUrl: String
+
+    googleApiKey: String
+    cloudinaryUploadUrl: String
+    cloudinaryApiKey: String
+
+    webAmplitudeApiKey: String
+    appAmplitudeApiKey: String
+
+    webClientID: String
+    androidClientID: String
+    iOSClientID: String
+    expoClientID: String
+
+    googleMapLibraries: String
+    googleColor: String
+    termsAndConditions: String
+    privacyPolicy: String
+
+    testOtp: String
+
+    firebaseKey: String
+    authDomain: String
+    projectId: String
+    storageBucket: String
+    msgSenderId: String
+    appId: String
+    measurementId: String
+
+    isPaidVersion: Boolean
+    skipEmailVerification: Boolean
+    skipMobileVerification: Boolean
+    costType: String
+    vapidKey: String
+}
+
+
+extend type Mutation {
+    createConfiguration(input: ConfigurationInput): Configuration
+}
+
+extend type Query {
+    configuration: Configuration
+}

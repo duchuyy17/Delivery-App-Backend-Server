@@ -1,0 +1,20 @@
+type Query {
+    _dummy: String
+}
+
+type Mutation {
+    login(username: String!, password: String!): AuthenticationResponse
+
+}
+
+type AuthenticationResponse {
+    successful: Boolean
+    token: String
+    fullName: String
+    email: String
+    phone: String
+    roles: [String]
+}
+
+
+
