@@ -9,7 +9,7 @@ public class RestaurantResponse {
 
     private String uniqueRestaurantId;
     private String id;
-    private Integer orderId;
+    private String orderId;
     private String orderPrefix;
     private String name;
     private String slug;

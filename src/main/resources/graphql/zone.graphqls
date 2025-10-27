@@ -1,0 +1,32 @@
+type Zone {
+    _id : String
+    title : String
+    description: String
+    location: GeoJsonPolygon
+    isActive : Boolean
+}
+
+type GeoJsonPolygon {
+    coordinates: [[[Float]]]
+}
+input ZoneInput {
+    _id : String
+    title: String
+    description: String
+    coordinates: [[[Float]]]
+    isActive : Boolean
+}
+input GeoJsonPolygonInput {
+    coordinates: [[[Float]]]
+}
+
+extend type Query {
+    zones: [Zone]
+    zoneById(id: ID!): Zone
+}
+
+extend type Mutation {
+    createZone(zone: ZoneInput!): Zone
+    updateZone(id: ID!, input: ZoneInput!): Zone
+    deleteZone(id: ID!): Boolean
+}

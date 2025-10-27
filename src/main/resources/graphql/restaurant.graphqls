@@ -9,6 +9,25 @@ type OwnerRestaurant {
     isActive: Boolean
 
 }
+input CoordinatesInput {
+    latitude: Float!
+    longitude: Float!
+
+}
+
+input CircleBoundsInput {
+    radius: Float!
+}
+type CircleBoundsResponse {
+    radius: Float
+}
+type Coordinates {
+    coordinates: [Float!]
+}
+type DeliveryBounds {
+    coordinates: [[[Float!]]]
+}
+
 
 type Restaurant {
     _id: ID
@@ -19,11 +38,14 @@ type Restaurant {
     slug: String
     phone: String
     address: String
+    city : String
+    postCode: String
     deliveryTime: Int
     deliveryInfo: DeliveryInfo
     openingTimes : OpeningTimes
     minimumOrder: Int
     isActive: Boolean
+    isAvailable:Boolean
     commissionRate: Float
     tax: Float
     owner: OwnerRestaurant
@@ -34,13 +56,36 @@ type Restaurant {
     location: Point
     cuisines: [String]
     unique_restaurant_id : String
+    deliveryBounds: GeoJsonPolygon
+    boundType : String
+    circleBounds: CircleBoundsResponse
+    stripeDetailsSubmitted: Boolean
+    bussinessDetails: BussinessDetails
+    currentWalletAmount: Float
+    totalWalletAmount: Float
+    withdrawnWalletAmount: Float
 }
+type GeoJsonPoint {
+    coordinates: [Float]
+}
+
 type DeliveryInfo{
     minDeliveryFee : Int
     deliveryDistance : Float
     deliveryFee : Int
 
 }
+
+type BussinessDetails {
+    bankName: String
+    accountName: String
+    accountCode: String
+    accountNumber: String
+    bussinessRegNo: String
+    companyRegNo: String
+    taxRate: Float
+}
+
 type OpeningTimes {
     day : String
     times : Timings
@@ -55,6 +100,7 @@ type RestaurantPaginationResponse {
     totalPages: Int
     totalCount: Int
 }
+
 
 input PointInput {
     coordinates: [Float]
@@ -80,11 +126,35 @@ input RestaurantInput {
     location: PointInput
     cuisines: [String]
 }
-
+type RestaurantResponse {
+    success: Boolean!
+    message: String
+    data: UpdateDeliveryBoundRestaurantResponse
+}
+type UpdateDeliveryBoundRestaurantResponse {
+    _id: ID!
+    deliveryBounds: DeliveryBounds
+    location: Coordinates
+    address: String
+    postCode: String
+    city: String
+}
 extend type Mutation {
-    createRestaurant(restaurant: RestaurantInput!, owner: ID!): Restaurant
+    createRestaurant(restaurant: RestaurantInput!, owner: ID!): RestaurantResponse
+    updateDeliveryBoundsAndLocation(
+        id: ID!
+        boundType: String!
+        bounds: [[[Float!]]]
+        circleBounds: CircleBoundsInput
+        location: CoordinatesInput!
+        address: String
+        postCode: String
+        city: String
+    ): RestaurantResponse
 }
 # 🟢 Thêm phần Query mới
 extend type Query {
     restaurantsPaginated(page: Int, limit: Int , search : String): RestaurantPaginationResponse
+    restaurant(id: String): Restaurant
+    getRestaurantDeliveryZoneInfo(id: ID!): Restaurant
 }

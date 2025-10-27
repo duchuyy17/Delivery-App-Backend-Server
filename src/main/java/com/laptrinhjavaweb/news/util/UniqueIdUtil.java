@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 public class UniqueIdUtil {
         private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         private static final SecureRandom random = new SecureRandom();
+        private static final int LENGTH = 5;
 
         public static String randomString(int length) {
             StringBuilder sb = new StringBuilder();
@@ -26,4 +27,14 @@ public class UniqueIdUtil {
         public static String generateVendorId() {
             return "VEN-" + randomString(5);
         }
+
+    public static String generateOrderPrefix() {
+        StringBuilder sb = new StringBuilder(LENGTH);
+        for (int i = 0; i < LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+        return sb.toString();
+    }
+
 }

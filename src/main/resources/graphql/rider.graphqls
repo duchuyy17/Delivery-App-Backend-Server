@@ -1,7 +1,4 @@
-type Zone {
-    _id: ID
-    title: String
-}
+
 
 type Rider {
     _id: ID

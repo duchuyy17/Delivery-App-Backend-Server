@@ -24,7 +24,9 @@ public enum ErrorCode {
             HttpStatus.BAD_REQUEST),
     INVALID_PHONENUMBER(1011, "phone number must start with 0 and extract with 10 number", HttpStatus.BAD_REQUEST),
     TOKEN_ALREADY_EXPIRED(1012, "token already expired", HttpStatus.BAD_REQUEST),
-    VENDOR_NOT_EXISTED(1013,"Vendor not existed",HttpStatus.NOT_FOUND);
+    VENDOR_NOT_EXISTED(1013,"Vendor not existed",HttpStatus.NOT_FOUND),
+    ZONE_NOT_EXISTED(1014,"Zone not existed",HttpStatus.NOT_FOUND),
+    RESTAURANT_NOT_EXISTED(1015,"Restaurant not found",HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode status) {
         this.code = code;
