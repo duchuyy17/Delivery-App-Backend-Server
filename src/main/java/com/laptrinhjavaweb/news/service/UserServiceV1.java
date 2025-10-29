@@ -5,6 +5,8 @@ import com.laptrinhjavaweb.news.repository.mongo.UserV1Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceV1 {
@@ -16,4 +18,8 @@ public class UserServiceV1 {
         }
         return userRepository.save(user);
     }
+    public List<UserDocument> getAllUsers() {
+        return userRepository.findAll();
+    }
+
 }

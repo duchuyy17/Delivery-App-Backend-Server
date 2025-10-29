@@ -1,24 +1,38 @@
 type User {
-    id: ID!
+    _id: String
     userName: String!
+    name : String
+    createdAt: String
+    userType :  String
+    lastLogin : String
     password: String
     fullName: String
     email: String
     imgUrl: String
-    status: Int
+    status: String
     phone: String
+    notes : String
+    addresses : Address
     resetPasswordToken: String
     dateOfBirth: String
+}
+type Address {
+    location : Point
+    deliveryAddress : String
 }
 extend type Mutation {
     createUser(input: CreateUserInput!): User
 }
+extend type Query {
+    users : [User]
+}
 input CreateUserInput {
-    userName: String!
-    password: String!
+    userName: String
+    password: String
+    name : String
     fullName: String
     email: String
     phone: String
     imgUrl: String
-    status: Int
+    status: String
 }

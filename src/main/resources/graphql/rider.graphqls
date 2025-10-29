@@ -1,4 +1,14 @@
 
+input RiderInput {
+    _id : String
+    name: String!
+    username: String!
+    password: String!
+    phone: String!
+    available: Boolean
+    vehicleType: String
+    zone: ID
+}
 
 type Rider {
     _id: ID
@@ -10,8 +20,37 @@ type Rider {
     vehicleType: String
     assigned: [String]
     zone: Zone
+    bussinessDetails: BusinessDetails
+    licenseDetails: LicenseDetails
+    vehicleDetails: VehicleDetails
+}
+
+type BusinessDetails {
+    bankName: String
+    accountName: String
+    accountCode: String
+    accountNumber: String
+    bussinessRegNo: String
+    companyRegNo: String
+    taxRate: Float
+}
+
+type LicenseDetails {
+    number: String
+    expiryDate: String
+    image: String
+}
+
+type VehicleDetails {
+    number: String
+    image: String
 }
 
 extend type Query {
     riders: [Rider]
+    rider(id: String!): Rider
+}
+extend type Mutation {
+    createRider(riderInput: RiderInput!): Rider
+    deleteRider(id: String!): Rider
 }

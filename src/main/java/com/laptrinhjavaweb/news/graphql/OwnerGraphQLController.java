@@ -1,6 +1,8 @@
 package com.laptrinhjavaweb.news.graphql;
 
 
+import com.laptrinhjavaweb.news.constant.UserTypeConstant;
+import com.laptrinhjavaweb.news.dto.request.mongo.StaffInput;
 import com.laptrinhjavaweb.news.dto.request.mongo.VendorInput;
 import com.laptrinhjavaweb.news.dto.response.mongo.VendorResponse;
 import com.laptrinhjavaweb.news.mongo.OwnerDocument;
@@ -34,7 +36,21 @@ public class OwnerGraphQLController {
                 .image(input.getImage())
                 .phoneNumber(input.getPhoneNumber())
                 .isActive(true)
-                .userType("VENDOR")
+                .userType(UserTypeConstant.VENDOR)
+                .build();
+
+        return OwnerService.createOwner(Owner);
+    }
+    @MutationMapping
+    public OwnerDocument createStaff(@Argument("staffInput") StaffInput input) {
+        OwnerDocument Owner = OwnerDocument.builder()
+                .name(input.getName())
+                .email(input.getEmail())
+                .password(input.getPassword()) // nếu dùng BCrypt thì encode trước khi lưu
+                .phoneNumber(input.getPhone())
+                .isActive(input.getIsActive())
+                .permissions(input.getPermissions())
+                .userType(UserTypeConstant.STAFF)
                 .build();
 
         return OwnerService.createOwner(Owner);
@@ -49,6 +65,11 @@ public class OwnerGraphQLController {
     @QueryMapping
     public List<OwnerDocument> vendors() {
         return OwnerService.getVendors();
+    }
+
+    @QueryMapping
+    public List<OwnerDocument> staffs() {
+        return OwnerService.getStaffs();
     }
 
     @QueryMapping

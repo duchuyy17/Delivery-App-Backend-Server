@@ -2,6 +2,8 @@ package com.laptrinhjavaweb.news.service;
 
 import java.util.*;
 
+import com.laptrinhjavaweb.news.mongo.UserDocument;
+import com.laptrinhjavaweb.news.repository.mongo.UserV1Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     RoleRepository roleRepository;
+    UserV1Repository repository;
 
     UserMapper userMapper;
 
@@ -114,5 +117,10 @@ public class UserServiceImpl implements UserService {
                 userRepository.findByUserName(name).orElseThrow(() -> new AppException(ErrorCode.UNAUTHETICATED));
 
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public List<UserDocument> findAll() {
+        return repository.findAll();
     }
 }

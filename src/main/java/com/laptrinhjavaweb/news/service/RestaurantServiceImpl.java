@@ -9,6 +9,7 @@ import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mapper.mongo.RestaurantMapper;
 import com.laptrinhjavaweb.news.mongo.OwnerDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
+import com.laptrinhjavaweb.news.mongo.ZoneDocument;
 import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
 import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
 import com.laptrinhjavaweb.news.util.UniqueIdUtil;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.geo.Point;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final OwnerRepository ownerRepository;
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMapper restaurantMapper;
+    private final ZoneService zoneService;
     @Override
     public RestaurantDocument createRestaurant(RestaurantInput restaurantInput, String ownerId) {
         OwnerDocument owner = ownerRepository.findById(ownerId)
@@ -44,7 +46,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Long nextId = restaurantRepository.count() + 1;
         restaurant.setOrderId(nextId);
         restaurant.setOrderPrefix(UniqueIdUtil.generateOrderPrefix());
-
+        restaurant.setTax(restaurantInput.getSalesTax());
         restaurant =  restaurantRepository.save(restaurant); // chỉ cần lưu restaurant thôi
         // add them nha hang vao vendor
         owner.getRestaurants().add(restaurant);
@@ -83,7 +85,29 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public UpdateDeliveryBoundRestaurantResponse updateDeliveryBoundsAndLocation(UpdateDeliveryBoundsInput input) {
         RestaurantDocument restaurant = restaurantRepository.findById(input.getId())
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
+        List<ZoneDocument> activeZones = zoneService.findByIsActive(true);
+        boolean isInsideZone = false;
+        GeoJsonPoint inputLocation = null;
+        if (input.getLocation() != null) {
+            inputLocation = new GeoJsonPoint(
+                    input.getLocation().getLongitude(),
+                    input.getLocation().getLatitude()
+            );
+        }
+        if (inputLocation != null) {
+            for (ZoneDocument zone : activeZones) {
+                GeoJsonPolygon zonePolygon = zone.getLocation2();
+                if (zonePolygon != null && isPointInsidePolygon(inputLocation, zonePolygon)) {
+                    isInsideZone = true;
+                    break;
+                }
+            }
+        }
+
+        if (!isInsideZone) {
+            throw new AppException(ErrorCode.LOCATION_OUTSIDE_ZONE);
+        }
         switch (input.getBoundType()){
             case DeliveryConstant.POINT -> {
                 restaurant.setDeliveryBounds(null);
@@ -96,6 +120,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                             .collect(Collectors.toList());
                     restaurant.setDeliveryBounds(new GeoJsonPolygon(points));
             }
+            default -> {throw new AppException(ErrorCode.BOUND_TYPE_NOT_VALID);}
         }
 
 
@@ -131,5 +156,23 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantDocument getRestaurantDeliveryZoneInfo(String id) {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
+    }
+    private boolean isPointInsidePolygon(GeoJsonPoint point, GeoJsonPolygon polygon) {
+        double x = point.getX();
+        double y = point.getY();
+
+        List<Point> points = polygon.getPoints();
+        boolean inside = false;
+
+        for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
+            double xi = points.get(i).getX(), yi = points.get(i).getY();
+            double xj = points.get(j).getX(), yj = points.get(j).getY();
+
+            boolean intersect = ((yi > y) != (yj > y)) &&
+                    (x < (xj - xi) * (y - yi) / (yj - yi + 0.0) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
     }
 }

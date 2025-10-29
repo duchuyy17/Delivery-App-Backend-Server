@@ -39,15 +39,16 @@ public class RestaurantDocument {
     private Integer commissionRate;
     private String username;
     private String password;
+    private String phone;
     private String postCode;
     private String plainPassword;
     private String uniqueRestaurantId;
     private String slug;
     private String city;
-    private Integer tax;
+    private Double tax;
     @DBRef(lazy = true)
     private OwnerDocument owner;
-    private String shopTye;
+    private String shopType;
     private String orderPrefix;
     private String logo;
     private List<String> cuisines = new ArrayList<>();

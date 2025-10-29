@@ -1,4 +1,7 @@
 package com.laptrinhjavaweb.news.mongo;
+import com.laptrinhjavaweb.news.dto.data.BussinessDetails;
+import com.laptrinhjavaweb.news.dto.data.LicenseDetails;
+import com.laptrinhjavaweb.news.dto.data.VehicleDetails;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -23,6 +26,9 @@ public class RiderDocument {
     @DBRef(lazy = true)
     private ZoneDocument zone; // nested object
 
+    private BussinessDetails bussinessDetails;
+    private LicenseDetails licenseDetails;
+    private VehicleDetails vehicleDetails;
     public String get_id() {
         return id;
     }

@@ -1,0 +1,21 @@
+input CuisineInput{
+    description : String
+    image : String
+    name : String
+    shopType : String
+}
+
+type Cuisine{
+    _id : String
+    description : String
+    image : String
+    name : String
+    shopType : String
+}
+
+extend type Mutation {
+    createCuisine(cuisineInput: CuisineInput!): Cuisine
+}
+extend type Query {
+    cuisines: [Cuisine]
+}

@@ -11,4 +11,5 @@ public interface ZoneService {
     List<ZoneDocument> findAll();
     ZoneDocument update(String id, ZoneDocument input);
     Boolean delete(String id);
+    List<ZoneDocument> findByIsActive(Boolean isActive);
 }

@@ -1,6 +1,8 @@
 package com.laptrinhjavaweb.news.mongo;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,9 +43,10 @@ public class OwnerDocument {
     private String password;
     private String plainPassword;
     private String token;
+
     @DBRef(lazy = true)
     private List<RestaurantDocument> restaurants = new ArrayList<>();
-    private List<String> permissions = new ArrayList<>();
+    private HashSet<String> permissions = new HashSet<>();
 
     // Nếu schema dùng "_id" thì thêm resolver
     public String get_id() {
@@ -51,5 +54,8 @@ public class OwnerDocument {
     }
     public String getunique_id(){
         return uniqueId;
+    }
+    public String getphone(){
+        return phoneNumber;
     }
 }

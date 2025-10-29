@@ -3,7 +3,7 @@ package com.laptrinhjavaweb.news.mongo;
 import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 
 @Data

@@ -18,6 +18,7 @@ public class RestaurantInput {
     private boolean isActive;
     private double commissionRate;
     private double tax;
+    private double salesTax;
     private String shopType;
     private int orderId;
     private String logo;

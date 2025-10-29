@@ -119,6 +119,7 @@ input RestaurantInput {
     isActive: Boolean
     commissionRate: Float
     tax: Float
+    salesTax : Float
     shopType: String
     orderId: Int
     logo: String
@@ -140,7 +141,7 @@ type UpdateDeliveryBoundRestaurantResponse {
     city: String
 }
 extend type Mutation {
-    createRestaurant(restaurant: RestaurantInput!, owner: ID!): RestaurantResponse
+    createRestaurant(restaurant: RestaurantInput!, owner: ID!): Restaurant
     updateDeliveryBoundsAndLocation(
         id: ID!
         boundType: String!

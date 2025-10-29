@@ -66,4 +66,9 @@ public class ZoneServiceImpl implements ZoneService {
         zoneRepository.deleteById(id);
         return true;
     }
+
+    @Override
+    public List<ZoneDocument> findByIsActive(Boolean isActive) {
+        return zoneRepository.findByIsActive(isActive).orElseThrow(() -> new AppException(ErrorCode.ZONE_NOT_EXISTED));
+    }
 }

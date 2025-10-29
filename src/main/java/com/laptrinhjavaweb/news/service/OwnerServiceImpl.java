@@ -23,6 +23,7 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -118,16 +119,29 @@ public class OwnerServiceImpl implements OwnerService ,AuthenticationService<Own
 
     @Override
     public OwnerDocument createOwner(OwnerDocument Owner) {
-        Owner.setPlainPassword(Owner.getPassword());
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        Owner.setPassword(passwordEncoder.encode(Owner.getPassword()));
-        Owner.setUniqueId(UniqueIdUtil.generateVendorId());
-        return ownerRepository.save(Owner);
+        try {
+            Owner.setPlainPassword(Owner.getPassword());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            Owner.setPassword(passwordEncoder.encode(Owner.getPassword()));
+            if(Owner.getUserType().equals(UserTypeConstant.VENDOR)){
+                Owner.setUniqueId(UniqueIdUtil.generateVendorId());
+            }
+            return ownerRepository.save(Owner);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Failed to create staff", e);
+        }
+
     }
 
     @Override
     public List<OwnerDocument> getVendors() {
         return ownerRepository.findByUserType(UserTypeConstant.VENDOR);
+    }
+
+    @Override
+    public List<OwnerDocument> getStaffs() {
+        return ownerRepository.findByUserType(UserTypeConstant.STAFF);
     }
 
     @Override
