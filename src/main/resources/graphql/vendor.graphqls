@@ -56,6 +56,7 @@ input StaffInput{
     permissions : [String]
     phone : String
     isActive : Boolean
+
 }
 type VendorResponse {
     _id: String
@@ -67,11 +68,14 @@ type VendorResponse {
 extend type Mutation {
     createVendor(vendorInput: VendorInput): Owner
     createStaff(staffInput : StaffInput) : Owner
+    editStaff(staffInput: StaffInput!): Owner
     ownerLogin(email: String!, password: String!): OwnerLoginResponse
+    editVendor(vendorInput: VendorInput): Owner
 }
 extend type Query {
     # Lấy danh sách tất cả vendor
     vendors: [Owner]
     restaurantByOwner(id: String): VendorResponse
     staffs : [Owner]
+    getVendor(id: String!): Owner
 }

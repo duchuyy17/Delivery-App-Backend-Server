@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("cuisine")
 @AllArgsConstructor
@@ -15,12 +16,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class CuisineDocument {
     @Id
     private String id;
+
     private String name;
     private String description;
     private String image;
     private String shopType;
 
-    private String get_id(){
+    private String get_id() {
         return id;
     }
 }

@@ -2,13 +2,13 @@ package com.laptrinhjavaweb.news.service;
 
 import java.util.List;
 
-import com.laptrinhjavaweb.news.mongo.UserDocument;
 import org.springframework.data.domain.PageRequest;
 
 import com.laptrinhjavaweb.news.dto.ApiResponse;
 import com.laptrinhjavaweb.news.dto.request.UserCreationRequest;
 import com.laptrinhjavaweb.news.dto.request.UserUpdateRequest;
 import com.laptrinhjavaweb.news.dto.response.UserResponse;
+import com.laptrinhjavaweb.news.mongo.UserDocument;
 
 public interface UserService {
     ApiResponse<UserResponse> save(UserCreationRequest request);
@@ -24,5 +24,6 @@ public interface UserService {
     void deleteById(Long id);
 
     UserResponse getMyInfo();
+
     List<UserDocument> findAll();
 }

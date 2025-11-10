@@ -1,0 +1,12 @@
+extend type Query {
+    getVersions: Versions!
+}
+
+type Versions {
+    customerAppVersion: AppVersion!
+}
+
+type AppVersion {
+    android: String
+    ios: String
+}

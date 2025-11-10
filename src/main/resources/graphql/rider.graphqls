@@ -7,7 +7,7 @@ input RiderInput {
     phone: String!
     available: Boolean
     vehicleType: String
-    zone: ID
+    zone: String
 }
 
 type Rider {
@@ -53,4 +53,5 @@ extend type Query {
 extend type Mutation {
     createRider(riderInput: RiderInput!): Rider
     deleteRider(id: String!): Rider
+    editRider(riderInput: RiderInput!): Rider
 }

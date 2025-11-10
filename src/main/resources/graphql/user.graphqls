@@ -9,30 +9,48 @@ type User {
     fullName: String
     email: String
     imgUrl: String
-    status: String
     phone: String
     notes : String
-    addresses : Address
     resetPasswordToken: String
     dateOfBirth: String
+    phoneIsVerified: Boolean
+    emailIsVerified: Boolean
+    isActive: Boolean
+    status: String
+    isOrderNotification: Boolean
+    isOfferNotification: Boolean
+    updatedAt: String
+    notificationToken: String
+    addresses: [Address]
+    favourite: [String]
 }
 type Address {
+    _id : String
     location : Point
     deliveryAddress : String
+    details: String
+    label: String
+    selected: Boolean
 }
 extend type Mutation {
-    createUser(input: CreateUserInput!): User
+    createUser(userInput: CreateUserInput!): AuthData
+    emailExist(email: String!): User
+    phoneExist(phone: String!): User
+    updateUser(updateUserInput: CreateUserInput!): User
 }
 extend type Query {
     users : [User]
+    user(id: ID!): User
+    profile: User
 }
 input CreateUserInput {
-    userName: String
-    password: String
-    name : String
-    fullName: String
-    email: String
     phone: String
-    imgUrl: String
-    status: String
+    email: String
+    password: String
+    name: String
+    notificationToken: String
+    appleId: String
+    phoneIsVerified: Boolean
+    emailIsVerified: Boolean
 }
+

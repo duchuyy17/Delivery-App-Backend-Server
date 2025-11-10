@@ -1,0 +1,24 @@
+type Addon {
+    _id : String
+    description : String
+    quantityMaximum : Int
+    quantityMinimum : Int
+    title: String
+    options: [String]
+}
+
+input CreateAddonInput{
+    description : String
+    quantityMaximum : Int
+    quantityMinimum : Int
+    title: String
+    options: [String]
+}
+
+input AddonInput {
+    restaurant: String!
+    addons: [CreateAddonInput!]!
+}
+extend type Mutation {
+    createAddons(addonInput: AddonInput): Restaurant
+}

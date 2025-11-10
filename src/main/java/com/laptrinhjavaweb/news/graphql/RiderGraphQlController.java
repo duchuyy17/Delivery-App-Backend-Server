@@ -1,15 +1,17 @@
 package com.laptrinhjavaweb.news.graphql;
 
-import com.laptrinhjavaweb.news.dto.request.mongo.RiderInput;
-import com.laptrinhjavaweb.news.mongo.RiderDocument;
-import com.laptrinhjavaweb.news.service.RiderService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
+import com.laptrinhjavaweb.news.dto.request.mongo.RiderInput;
+import com.laptrinhjavaweb.news.mongo.RiderDocument;
+import com.laptrinhjavaweb.news.service.RiderService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,10 +27,17 @@ public class RiderGraphQlController {
     public RiderDocument createRider(@Argument RiderInput riderInput) {
         return riderService.createRider(riderInput);
     }
+
+    @MutationMapping
+    public RiderDocument editRider(@Argument("riderInput") RiderInput riderInput) {
+        return riderService.editRider(riderInput);
+    }
+
     @QueryMapping
     public RiderDocument rider(@Argument String id) {
         return riderService.getRiderById(id);
     }
+
     @MutationMapping
     public RiderDocument deleteRider(@Argument String id) {
         return riderService.deleteRider(id);

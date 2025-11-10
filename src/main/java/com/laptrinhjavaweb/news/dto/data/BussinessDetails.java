@@ -11,7 +11,7 @@ public class BussinessDetails {
     String accountName;
     String accountNumber;
     String accountCode;
-    String businessRegNo;
+    String bussinessRegNo;
     String companyRegNo;
     Float taxRate;
 }

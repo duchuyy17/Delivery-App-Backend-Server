@@ -1,0 +1,40 @@
+
+type Category {
+    _id: ID
+    title: String
+    image : String
+    foods: [Food]
+    createdAt: String
+    updatedAt: String
+}
+
+
+
+type Variation {
+    _id: ID
+    title: String
+    price: Float
+    discounted: Float
+    addons: [ID]
+    isOutOfStock: Boolean
+}
+
+
+input SubCategoryInput {
+    _id: ID
+    title: String
+    parentCategoryId: String
+}
+
+input CategoryInput {
+    _id: ID
+    restaurant: String
+    title: String
+    image: String
+    subCategories: [SubCategoryInput]
+}
+
+extend type Mutation {
+    createCategory(category: CategoryInput!): Restaurant
+    editCategory(category: CategoryInput!): Restaurant
+}

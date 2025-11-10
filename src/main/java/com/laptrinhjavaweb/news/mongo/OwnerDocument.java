@@ -1,21 +1,20 @@
 package com.laptrinhjavaweb.news.mongo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @AllArgsConstructor
@@ -30,13 +29,16 @@ public class OwnerDocument {
 
     @Field("unique_id")
     private String uniqueId;
+
     private String email;
     private String firstName;
     private String lastName;
     private String userType;
     private String userTypeId;
+
     @Builder.Default
     private boolean isActive = true;
+
     private String name;
     private String image;
     private String phoneNumber;
@@ -46,16 +48,19 @@ public class OwnerDocument {
 
     @DBRef(lazy = true)
     private List<RestaurantDocument> restaurants = new ArrayList<>();
+
     private HashSet<String> permissions = new HashSet<>();
 
     // Nếu schema dùng "_id" thì thêm resolver
     public String get_id() {
         return id;
     }
-    public String getunique_id(){
+
+    public String getunique_id() {
         return uniqueId;
     }
-    public String getphone(){
+
+    public String getphone() {
         return phoneNumber;
     }
 }

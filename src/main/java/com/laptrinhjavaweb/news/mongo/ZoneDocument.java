@@ -1,10 +1,11 @@
 package com.laptrinhjavaweb.news.mongo;
 
-import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
-import lombok.*;
 import org.springframework.data.annotation.Id;
-
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
+
+import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 public class ZoneDocument {
     @Id
     private String id;
+
     private String title;
     private String description;
     // Dữ liệu tọa độ đa giác (Polygon)
@@ -32,8 +34,8 @@ public class ZoneDocument {
         }
         return new GeoJsonPolygonResponse(location);
     }
+
     public GeoJsonPolygon getLocation2() {
         return location;
     }
-
 }

@@ -1,11 +1,13 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class RestaurantInput {
+    private String id;
+    private String _id;
     private String name;
     private String image;
     private String username;
@@ -25,4 +27,12 @@ public class RestaurantInput {
     private String password;
     private List<String> cuisines;
     private PointInput location;
+
+    public String getId() {
+        return _id != null ? _id : id;
+    }
+
+    public double getTax() {
+        return salesTax;
+    }
 }

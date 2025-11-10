@@ -1,8 +1,8 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ZoneInput {
@@ -12,7 +12,7 @@ public class ZoneInput {
     private String isActive;
     private List<List<List<Double>>> coordinates; // [[[x, y], [x, y], ...]]
 
-    public String get_id(){
+    public String get_id() {
         return id;
     }
     // getters, setters

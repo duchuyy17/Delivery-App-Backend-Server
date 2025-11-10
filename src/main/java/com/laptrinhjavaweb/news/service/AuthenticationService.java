@@ -9,7 +9,7 @@ import com.laptrinhjavaweb.news.dto.response.AuthenticationResponse;
 import com.laptrinhjavaweb.news.dto.response.IntrospectResponse;
 import com.nimbusds.jose.JOSEException;
 
-public interface  AuthenticationService<T> {
+public interface AuthenticationService<T> {
     T login(String username, String password);
 
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
@@ -17,4 +17,6 @@ public interface  AuthenticationService<T> {
     void logout(LogoutRequest request) throws ParseException, JOSEException;
 
     AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException;
+
+    String getCurrentUserId(String token) throws ParseException;
 }

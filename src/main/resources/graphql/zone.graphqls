@@ -4,6 +4,7 @@ type Zone {
     description: String
     location: GeoJsonPolygon
     isActive : Boolean
+    tax : Float
 }
 
 type GeoJsonPolygon {

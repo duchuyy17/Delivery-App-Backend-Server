@@ -1,15 +1,16 @@
 package com.laptrinhjavaweb.news.mongo;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
-import com.laptrinhjavaweb.news.dto.data.Address;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.laptrinhjavaweb.news.dto.data.Address;
+
 import lombok.*;
-import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +22,6 @@ public class UserDocument {
     private String name;
     private String email;
     private String phone;
-    private Date createdAt;
     private String userName;
     private String password;
     private String fullName;
@@ -30,19 +30,27 @@ public class UserDocument {
     private Date lastLogin;
     private String note;
     private String imgUrl;
-    private HashSet<Address> addresses = new HashSet<>();
-
+    @DBRef(lazy = true)
+    private List<AddressDocument> addresses = new ArrayList<>();
     private String resetPasswordToken;
-    private LocalDate dateOfBirth;
+    private boolean phoneIsVerified;
+    private boolean emailIsVerified;
+    private String appleId;
+    private boolean isActive;
+    private boolean isOrderNotification;
+    private boolean isOfferNotification;
+    private Date createdAt;
+    private Date updatedAt;
+    private String notificationToken;
+    private List<String> favourite = new ArrayList<>();
+    private String notes;
 
-    // Tham chiếu tới RoleDocument (thay cho ManyToMany)
-    @DBRef
-    private Set<RoleDocument> roles = new HashSet<>();
 
     public long getCreatedAt() {
         return createdAt != null ? createdAt.getTime() : 0;
     }
-    private String get_id(){
+
+    private String get_id() {
         return id;
     }
 }

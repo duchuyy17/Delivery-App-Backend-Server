@@ -1,23 +1,14 @@
 package com.laptrinhjavaweb.news.config;
 
-import java.util.HashSet;
-
-import com.laptrinhjavaweb.news.mongo.OwnerDocument;
-import com.laptrinhjavaweb.news.mongo.RoleDocument;
-import com.laptrinhjavaweb.news.mongo.UserDocument;
-import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RoleV1Repository;
-import com.laptrinhjavaweb.news.repository.mongo.UserV1Repository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.laptrinhjavaweb.news.entity.RoleEntity;
-import com.laptrinhjavaweb.news.entity.UserEntity;
-import com.laptrinhjavaweb.news.repository.RoleRepository;
-import com.laptrinhjavaweb.news.repository.UserRepository;
+import com.laptrinhjavaweb.news.mongo.OwnerDocument;
+import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
+import com.laptrinhjavaweb.news.repository.mongo.RoleV1Repository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

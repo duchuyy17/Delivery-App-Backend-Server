@@ -1,0 +1,18 @@
+type SubCategory {
+    _id: ID
+    title: String
+    parentCategoryId: String
+    createdAt: String
+    updatedAt: String
+}
+
+extend type Query {
+    subCategoriesByParentId(parentCategoryId: String!): [SubCategory]
+    subCategories: [SubCategory]
+
+}
+extend type Mutation {
+    createSubCategories(subCategories: [SubCategoryInput!]!): String!
+    deleteSubCategory(_id: String!): String
+
+}

@@ -24,13 +24,19 @@ public enum ErrorCode {
             HttpStatus.BAD_REQUEST),
     INVALID_PHONENUMBER(1011, "phone number must start with 0 and extract with 10 number", HttpStatus.BAD_REQUEST),
     TOKEN_ALREADY_EXPIRED(1012, "token already expired", HttpStatus.BAD_REQUEST),
-    VENDOR_NOT_EXISTED(1013,"Vendor not existed",HttpStatus.NOT_FOUND),
-    ZONE_NOT_EXISTED(1014,"Zone not existed",HttpStatus.NOT_FOUND),
-    RESTAURANT_NOT_EXISTED(1015,"Restaurant not found",HttpStatus.NOT_FOUND),
-    LOCATION_OUTSIDE_ZONE(1016,"Địa điểm cửa hàng không thuộc phạm vi giao hàng",HttpStatus.BAD_REQUEST),
-    BOUND_TYPE_NOT_VALID(1017,"Kiểu vùng không hợp lệ",HttpStatus.BAD_REQUEST),
-    ZONE_NOT_FOUND (1018,"Phạm vi giao hàng không tồn tại!",HttpStatus.BAD_REQUEST),
-    RIDER_NOT_FOUND(1019,"Không tìm thấy tài xế!",HttpStatus.NOT_FOUND);
+    VENDOR_NOT_EXISTED(1013, "Vendor not existed", HttpStatus.NOT_FOUND),
+    ZONE_NOT_EXISTED(1014, "Zone not existed", HttpStatus.NOT_FOUND),
+    RESTAURANT_NOT_EXISTED(1015, "Restaurant not found", HttpStatus.NOT_FOUND),
+    LOCATION_OUTSIDE_ZONE(1016, "Địa điểm cửa hàng không thuộc phạm vi giao hàng", HttpStatus.BAD_REQUEST),
+    BOUND_TYPE_NOT_VALID(1017, "Kiểu vùng không hợp lệ", HttpStatus.BAD_REQUEST),
+    ZONE_NOT_FOUND(1018, "Phạm vi giao hàng không tồn tại!", HttpStatus.BAD_REQUEST),
+    RIDER_NOT_FOUND(1019, "Không tìm thấy tài xế!", HttpStatus.NOT_FOUND),
+    STAFF_NOT_FOUND(1020, "Không tìm thấy quản trị viên!", HttpStatus.NOT_FOUND),
+    CATEGORY_NOT_FOUND(1021,"Không tìm thấy danh mục!",HttpStatus.NOT_FOUND),
+    SUBCATEGORY_NOT_FOUND(1022,"Không tìm thấy danh mục con!",HttpStatus.NOT_FOUND),
+    COUPON_NOT_FOUND(1023,"Không tìm thấy mã giảm giá",HttpStatus.NOT_FOUND),
+    LOGIN_TYPE_NOT_SUPPORT(1024,"Chưa hỗ trợ loại đăng nhập này" ,HttpStatus.BAD_REQUEST);
+
     ErrorCode(int code, String message, HttpStatusCode status) {
         this.code = code;
         this.message = message;

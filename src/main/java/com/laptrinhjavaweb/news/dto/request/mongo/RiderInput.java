@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class RiderInput {
+    private String id;
+    private String _id;
     private String name;
     private String username;
     private String password;
@@ -11,4 +13,8 @@ public class RiderInput {
     private Boolean available;
     private String vehicleType;
     private String zone;
+
+    public String getId() {
+        return _id != null ? _id : id;
+    }
 }

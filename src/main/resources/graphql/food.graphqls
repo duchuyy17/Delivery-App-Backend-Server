@@ -1,0 +1,38 @@
+input FoodInput {
+    _id: ID
+    restaurant: ID!
+    title: String
+    description: String
+    category: ID
+    subCategory: ID
+    image: String
+    isOutOfStock: Boolean
+    isActive: Boolean
+    variations: [VariationInput!]!
+}
+
+input VariationInput {
+    _id: ID
+    title: String!
+    price: Float!
+    discounted: Float
+    addons: [ID]
+    isOutOfStock: Boolean
+}
+
+type Food {
+    _id: ID
+    title: String
+    description: String
+    variations: [Variation]
+    image: String
+    isActive: Boolean
+    isOutOfStock: Boolean
+    subCategory: String
+    createdAt: String
+    updatedAt: String
+}
+
+extend type Mutation {
+    createFood(foodInput: FoodInput!): Restaurant
+}

@@ -1,9 +1,7 @@
 package com.laptrinhjavaweb.news.repository.mongo;
 
-import com.laptrinhjavaweb.news.mongo.ConfigurationDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
+import com.laptrinhjavaweb.news.mongo.ConfigurationDocument;
 
-public interface ConfigurationRepository extends MongoRepository<ConfigurationDocument, String> {
-}
+public interface ConfigurationRepository extends MongoRepository<ConfigurationDocument, String> {}

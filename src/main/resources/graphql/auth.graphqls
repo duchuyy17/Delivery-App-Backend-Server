@@ -1,0 +1,21 @@
+type AuthData {
+    userId: ID
+    token: String
+    tokenExpiration: Int
+    name: String
+    email: String
+    phone: String
+    isNewUser: Boolean
+    isActive : Boolean
+}
+
+extend type Mutation {
+    login(
+        email: String
+        password: String
+        type: String!
+        appleId: String
+        name: String
+        notificationToken: String
+    ): AuthData
+}

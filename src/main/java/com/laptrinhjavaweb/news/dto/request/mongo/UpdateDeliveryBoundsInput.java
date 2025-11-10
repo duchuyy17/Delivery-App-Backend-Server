@@ -1,9 +1,10 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import com.laptrinhjavaweb.news.dto.data.CircleBounds;
-import lombok.Data;
-
 import java.util.List;
+
+import com.laptrinhjavaweb.news.dto.data.CircleBounds;
+
+import lombok.Data;
 
 @Data
 public class UpdateDeliveryBoundsInput {
@@ -15,5 +16,4 @@ public class UpdateDeliveryBoundsInput {
     private String address;
     private String postCode;
     private String city;
-
 }

@@ -1,3 +1,4 @@
+scalar JSON
 type Point {
     coordinates: [Float]
 
@@ -27,7 +28,10 @@ type Coordinates {
 type DeliveryBounds {
     coordinates: [[[Float!]]]
 }
-
+type ReviewData{
+    total: Int
+    ratings : Float
+}
 
 type Restaurant {
     _id: ID
@@ -42,7 +46,7 @@ type Restaurant {
     postCode: String
     deliveryTime: Int
     deliveryInfo: DeliveryInfo
-    openingTimes : OpeningTimes
+    openingTimes : [OpeningTimes]
     minimumOrder: Int
     isActive: Boolean
     isAvailable:Boolean
@@ -64,6 +68,15 @@ type Restaurant {
     currentWalletAmount: Float
     totalWalletAmount: Float
     withdrawnWalletAmount: Float
+    categories: [Category]
+    options: [Option!]
+    addons : [Addon]
+    reviewCount : Int
+    reviewData : ReviewData
+    rating: Float
+    restaurantUrl: String
+    zone : Zone
+
 }
 type GeoJsonPoint {
     coordinates: [Float]
@@ -88,11 +101,20 @@ type BussinessDetails {
 
 type OpeningTimes {
     day : String
-    times : Timings
+    times : [Timings]
 }
 type Timings {
-    startTime : [Int]
-    endTime : [Int]
+    startTime : [String]
+    endTime : [String]
+}
+input TimeInput {
+    startTime: [String]
+    endTime: [String]
+}
+
+input TimingsInput {
+    day: String
+    times: [TimeInput]
 }
 type RestaurantPaginationResponse {
     data: [Restaurant]
@@ -107,6 +129,7 @@ input PointInput {
 }
 
 input RestaurantInput {
+    _id: String
     name: String
     image: String
     username: String
@@ -127,11 +150,45 @@ input RestaurantInput {
     location: PointInput
     cuisines: [String]
 }
+input BussinessDetailsInput {
+    bankName: String
+    accountName: JSON
+    accountCode: JSON
+    accountNumber: JSON
+    bussinessRegNo: JSON
+    companyRegNo: JSON
+    taxRate: Float
+}
+
+input RestaurantProfileInput {
+    _id: String
+    name: String
+    image: String
+    username: String
+    orderPrefix: String
+    slug: String
+    phone: String
+    address: String
+    deliveryTime: Int
+    minimumOrder: Int
+    isActive: Boolean
+    commissionRate: Float
+    tax: Float
+    salesTax : Float
+    shopType: String
+    orderId: Int
+    logo: String
+    password: String
+    location: PointInput
+    cuisines: [String]
+}
+
 type RestaurantResponse {
     success: Boolean!
     message: String
     data: UpdateDeliveryBoundRestaurantResponse
 }
+
 type UpdateDeliveryBoundRestaurantResponse {
     _id: ID!
     deliveryBounds: DeliveryBounds
@@ -140,6 +197,56 @@ type UpdateDeliveryBoundRestaurantResponse {
     postCode: String
     city: String
 }
+type RestaurantPreview {
+    _id: ID
+    orderId: Int
+    orderPrefix: String
+    name: String
+    image: String
+    logo: String
+    address: String
+    username: String
+    password: String
+    deliveryTime: Int
+    minimumOrder: Float
+    sections: [String]
+    rating: Float
+    isActive: Boolean
+    isAvailable: Boolean
+    slug: String
+    stripeDetailsSubmitted: Boolean
+    commissionRate: Float
+    tax: Float
+    notificationToken: String
+    enableNotification: Boolean
+    shopType: String
+    cuisines: [String]
+    keywords: [String]
+    tags: [String]
+    reviewCount: Int
+    reviewAverage: Float
+    location: Point
+    openingTimes: [OpeningTimes]
+}
+type SectionInfo {
+    _id: ID
+    name: String
+    restaurants: [String]
+}
+
+type Offer {
+    _id: ID
+    name: String
+    tag: String
+    restaurants: [String]
+}
+
+type NearByRestaurantsPreview {
+    offers: [Offer]
+    sections: [SectionInfo]
+    restaurants: [RestaurantPreview]
+}
+
 extend type Mutation {
     createRestaurant(restaurant: RestaurantInput!, owner: ID!): Restaurant
     updateDeliveryBoundsAndLocation(
@@ -152,10 +259,18 @@ extend type Mutation {
         postCode: String
         city: String
     ): RestaurantResponse
+    updateTimings(id: String!, openingTimes: [TimingsInput]): Restaurant
+    editRestaurant(restaurant: RestaurantProfileInput!): Restaurant
+    updateRestaurantBussinessDetails(id: String!, bussinessDetails: BussinessDetailsInput): RestaurantResponse
 }
 # 🟢 Thêm phần Query mới
 extend type Query {
     restaurantsPaginated(page: Int, limit: Int , search : String): RestaurantPaginationResponse
     restaurant(id: String): Restaurant
     getRestaurantDeliveryZoneInfo(id: ID!): Restaurant
+    restaurants: [Restaurant]
+    nearbyRestaurants(longitude: Float, latitude:Float, radiusKm: Int) : [Restaurant]
+    nearByRestaurantsPreview(latitude: Float, longitude: Float, shopType: String): NearByRestaurantsPreview
+    mostOrderedRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
+    recentOrderRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
 }

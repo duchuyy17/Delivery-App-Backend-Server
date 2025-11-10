@@ -1,10 +1,8 @@
 package com.laptrinhjavaweb.news.config;
 
-import java.sql.SQLOutput;
 import java.text.ParseException;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.laptrinhjavaweb.news.dto.response.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -15,6 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import com.laptrinhjavaweb.news.dto.request.IntrospectRequest;
+import com.laptrinhjavaweb.news.dto.response.AuthenticationResponse;
 import com.laptrinhjavaweb.news.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 
@@ -31,7 +30,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            System.out.println("TOKEN LA: "+token);
+            System.out.println("TOKEN LA: " + token);
             boolean isValid = authenticationService
                     .introspect(IntrospectRequest.builder().token(token).build())
                     .isValid();

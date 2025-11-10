@@ -1,9 +1,8 @@
 package com.laptrinhjavaweb.news.dto.response.mongo;
 
-import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class VendorResponse {
@@ -12,7 +11,7 @@ public class VendorResponse {
     private String userType;
     private List<RestaurantResponse> restaurants;
 
-    private String get_id(){
+    private String get_id() {
         return id;
     }
 }

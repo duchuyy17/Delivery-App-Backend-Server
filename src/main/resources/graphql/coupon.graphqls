@@ -1,0 +1,21 @@
+type Coupon {
+    _id: ID
+    title: String
+    discount: Float
+    enabled: Boolean
+}
+
+input CouponInput {
+    _id : String
+    title: String!
+    discount: Float!
+    enabled: Boolean!
+}
+extend type Query {
+    coupons: [Coupon]
+}
+
+extend type Mutation {
+    createCoupon(couponInput: CouponInput!): Coupon
+    editCoupon(couponInput: CouponInput!): Coupon
+}

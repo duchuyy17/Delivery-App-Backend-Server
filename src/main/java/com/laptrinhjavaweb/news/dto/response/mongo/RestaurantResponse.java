@@ -2,6 +2,7 @@ package com.laptrinhjavaweb.news.dto.response.mongo;
 
 import com.laptrinhjavaweb.news.dto.data.DeliveryInfo;
 import com.laptrinhjavaweb.news.dto.request.mongo.PointInput;
+
 import lombok.Data;
 
 @Data
@@ -27,6 +28,7 @@ public class RestaurantResponse {
     public String get_id() {
         return id;
     }
+
     public String getunique_restaurant_id() {
         return uniqueRestaurantId;
     }

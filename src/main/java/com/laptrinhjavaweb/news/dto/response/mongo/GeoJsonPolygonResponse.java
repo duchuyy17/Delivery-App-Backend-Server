@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.dto.response.mongo;
 
-import lombok.Data;
-import lombok.Getter;
-import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
+
+import lombok.Data;
+import lombok.Getter;
 
 @Getter
 @Data
@@ -19,5 +20,4 @@ public class GeoJsonPolygonResponse {
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
-
 }

@@ -1,5 +1,7 @@
 package com.laptrinhjavaweb.news.dto.data;
+
 import lombok.*;
+
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,0 +1,26 @@
+type Banner {
+    _id: ID
+    title: String
+    description: String
+    action: String
+    screen: String
+    file: String
+    parameters: JSON
+}
+input BannerInput {
+    _id: String
+    title: String!
+    description: String
+    action: String
+    file: String
+    screen: String
+    parameters: JSON
+}
+
+extend type Query {
+    banners: [Banner]
+}
+extend type Mutation {
+    createBanner(bannerInput: BannerInput): Banner
+    editBanner(bannerInput: BannerInput!): Banner
+}

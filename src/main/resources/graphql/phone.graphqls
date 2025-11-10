@@ -1,0 +1,3 @@
+extend type Mutation {
+    sendOtpToPhoneNumber(phone: String!): Otp
+}

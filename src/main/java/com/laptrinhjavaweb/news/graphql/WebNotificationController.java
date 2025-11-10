@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.graphql;
 
-import com.laptrinhjavaweb.news.mongo.WebNotification;
-import com.laptrinhjavaweb.news.service.WebNotificationService;
+import java.util.List;
+
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
+import com.laptrinhjavaweb.news.mongo.WebNotification;
+import com.laptrinhjavaweb.news.service.WebNotificationService;
 
 @Controller
 public class WebNotificationController {

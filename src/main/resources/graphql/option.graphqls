@@ -1,0 +1,21 @@
+input OptionInput {
+    title: String!
+    description: String
+    price: Float!
+}
+
+input CreateOptionInput {
+    restaurant: String!
+    options: [OptionInput!]!
+}
+
+type Option {
+    _id: ID!
+    title: String!
+    description: String
+    price: Float!
+}
+
+extend type Mutation {
+    createOptions(optionInput: CreateOptionInput): Restaurant
+}

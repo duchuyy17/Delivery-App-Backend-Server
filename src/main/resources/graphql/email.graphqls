@@ -1,0 +1,12 @@
+extend type Mutation {
+    sendOtpToEmail(email: String!): Otp
+    verifyOtp(otp: String!, email: String, phone: String): OtpResult
+}
+
+type Otp {
+    result: Boolean
+}
+
+type OtpResult {
+    result: Boolean
+}
