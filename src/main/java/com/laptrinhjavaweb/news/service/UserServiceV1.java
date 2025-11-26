@@ -165,5 +165,4 @@ public class UserServiceV1  {
         throw new AppException(ErrorCode.LOGIN_TYPE_NOT_SUPPORT);
     }
 
-
 }

@@ -1,5 +1,6 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,5 +24,11 @@ public class AddressDocument {
     private GeoJsonPoint location;
     public String get_id(){
         return id;
+    }
+    public LocationResponse getlocation(){
+        if (location == null) {
+            return null;
+        }
+        return new LocationResponse(location);
     }
 }

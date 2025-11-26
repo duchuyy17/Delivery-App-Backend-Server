@@ -1,16 +1,24 @@
 package com.laptrinhjavaweb.news.service.impl;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.laptrinhjavaweb.news.constant.RestaurantTypeConstant;
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
+import com.laptrinhjavaweb.news.mongo.*;
+import com.laptrinhjavaweb.news.repository.mongo.FoodRepository;
+import com.laptrinhjavaweb.news.service.JwtService;
 import com.laptrinhjavaweb.news.service.RestaurantService;
 import com.laptrinhjavaweb.news.service.ZoneService;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
@@ -31,9 +39,6 @@ import com.laptrinhjavaweb.news.dto.response.mongo.UpdateRestaurantResponse;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mapper.mongo.RestaurantMapper;
-import com.laptrinhjavaweb.news.mongo.OwnerDocument;
-import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
-import com.laptrinhjavaweb.news.mongo.ZoneDocument;
 import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
 import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
 import com.laptrinhjavaweb.news.util.UniqueIdUtil;
@@ -48,6 +53,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper restaurantMapper;
     private final ZoneService zoneService;
     private final PasswordEncoder passwordEncoder;
+    private final FoodRepository foodRepository;
+    private final RestaurantTagService restaurantTagService;
+    @Value("${jwt.signerKey}")
+    private String SIGNER_KEY;
+
+    @Value("${jwt.valid-duration}")
+    private Long VALID_DURATION;
+
+    @Value("${jwt.refresh-duration}")
+    private Long REFRESH_DURATION;
 
     @Transactional
     @Override
@@ -71,8 +86,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setTax(restaurantInput.getSalesTax());
         restaurant.setOrderId(1L);
         restaurant.setIsAvailable(true);
+        restaurant.setActive(restaurantInput.isActive());
         restaurant.setSections(List.of("66b44629329c70266a0269d2"));
-
+        restaurant.setTags(restaurantTagService.generateBasicTags(restaurant));
+        restaurant.setKeywords(restaurantTagService.generateBasicKeywords(restaurant));
         restaurant = restaurantRepository.save(restaurant); // chỉ cần lưu restaurant thôi
         // add them nha hang vao vendor
         owner.getRestaurants().add(restaurant);
@@ -136,6 +153,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 GeoJsonPolygon zonePolygon = zone.getLocation2();
                 if (zonePolygon != null && isPointInsidePolygon(inputLocation, zonePolygon)) {
                     isInsideZone = true;
+                    restaurant.setZone(zone);
                     break;
                 }
             }
@@ -275,7 +293,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(100, Metrics.KILOMETERS);
         List<RestaurantDocument> restaurantDocuments = restaurantRepository.findByLocationNear(point, distance);
-        if(shopType != null){
+        if (shopType != null) {
             restaurantDocuments = restaurantDocuments.stream()
                     .filter(restaurantDocument -> restaurantDocument.getShopType().equals(shopType))
                     .toList();
@@ -304,6 +322,24 @@ public class RestaurantServiceImpl implements RestaurantService {
         ).toList();
     }
 
+    @Override
+    public AuthData login(String username, String password) {
+        RestaurantDocument user =
+                restaurantRepository.findByUsername(username).orElseThrow(
+                        () -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
+        boolean authenticated = password.equals(user.getPassword());
+        if (!authenticated) {
+            throw new AppException(ErrorCode.UNAUTHETICATED);
+        }
+
+        var token = generateToken(user);
+
+        return AuthData.builder()
+                .restaurantId(user.getId())
+                .token(token)
+                .build();
+    }
+
 
     private boolean isPointInsidePolygon(GeoJsonPoint point, GeoJsonPolygon polygon) {
         double x = point.getX();
@@ -322,4 +358,96 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         return inside;
     }
+
+//    private void generateTagsAndKeywords(RestaurantDocument restaurant){
+//        Set<String> tags = new LinkedHashSet<>();
+//        Set<String> keywords = new LinkedHashSet<>();
+//        // 1️⃣ Thêm tên nhà hàng vào keywords
+//        if (restaurant.getName() != null) {
+//            keywords.add(restaurant.getName());
+//        }
+//        // 2️⃣ Lặp qua toàn bộ categories
+//        for (CategoryDocument category : restaurant.getCategories()) {
+//
+//            // TAG = category title
+//            if (category.getTitle() != null) {
+//                tags.add(category.getTitle());
+//                keywords.add(category.getTitle());
+//            }
+//
+//            // 3️⃣ SubCategories → keywords
+//            if (category.getSubCategories() != null) {
+//                category.getSubCategories().forEach(sub -> {
+//                    if (sub.getTitle() != null) {
+//                        keywords.add(sub.getTitle());
+//                    }
+//                });
+//            }
+//
+//            // 4️⃣ Foods → keywords
+//            if (category.getFoods() != null) {
+//                category.getFoods().forEach(food -> {
+//
+//                    if (food.getTitle() != null) {
+//                        keywords.add(food.getTitle());
+//                    }
+//
+//                    // 5️⃣ Variations → keywords
+//                    if (food.getVariations() != null) {
+//                        food.getVariations().forEach(variation -> {
+//                            if (variation.getTitle() != null) {
+//                                keywords.add(variation.getTitle());
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+//        }
+//        // 6️⃣ Addons → keywords
+//        if (restaurant.getAddons() != null) {
+//            restaurant.getAddons().forEach(addon -> {
+//                if (addon.getTitle() != null) {
+//                    keywords.add(addon.getTitle());
+//                }
+//            });
+//        }
+//        // 7️⃣ Options → keywords
+//        if (restaurant.getOptions() != null) {
+//            restaurant.getOptions().forEach(opt -> keywords.add(opt.getTitle()));
+//        }
+//        // 8️⃣ Gán về document
+//        restaurant.setTags(new ArrayList<>(tags));
+//        restaurant.setKeywords(new ArrayList<>(keywords));
+//    }
+
+
+
+    private String generateToken(RestaurantDocument user) {
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getUsername())
+                .issuer("deliveryApp.com")
+                .issueTime(new Date())
+                .expirationTime(new Date(
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                .jwtID(UUID.randomUUID().toString())
+                .claim(
+                        "refreshToken",
+                        new Date(Instant.now()
+                                .plus(REFRESH_DURATION, ChronoUnit.SECONDS)
+                                .toEpochMilli()))
+                .claim("scope", "ROLE_" + "STORE")
+                .claim("restaurantId", user.getId())
+                .claim("email",user.getUsername())
+                .build();
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

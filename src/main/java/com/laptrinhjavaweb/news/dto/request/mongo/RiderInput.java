@@ -13,6 +13,8 @@ public class RiderInput {
     private Boolean available;
     private String vehicleType;
     private String zone;
+    private String notificationToken;
+    private String timeZone;
 
     public String getId() {
         return _id != null ? _id : id;

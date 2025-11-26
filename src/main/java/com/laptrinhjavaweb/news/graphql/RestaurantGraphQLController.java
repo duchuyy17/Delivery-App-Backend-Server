@@ -3,6 +3,8 @@ package com.laptrinhjavaweb.news.graphql;
 import java.util.Collections;
 import java.util.List;
 
+
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import com.laptrinhjavaweb.news.mongo.SectionInfoDocument;
@@ -114,14 +116,14 @@ public class RestaurantGraphQLController {
             @Argument String shopType
     ) {
         List<RestaurantPreview> restaurantPreviews =   restaurantService.findNearByLocation(longitude, latitude, shopType);
-        SectionInfoDocument section = SectionInfoDocument.builder()
-                .id("66b44629329c70266a0269d2")
-                .name("add section")
-                .restaurants(List.of("691162a52978894ec43f20a3"))
-                .build();
+//        SectionInfoDocument section = SectionInfoDocument.builder()
+//                .id("66b44629329c70266a0269d2")
+//                .name("add section")
+//                .restaurants(List.of("691162a52978894ec43f20a3"))
+//                .build();
         return NearByRestaurantsPreview.builder()
                 .offers(Collections.emptyList())
-                .sections(List.of(section))
+                .sections(Collections.emptyList())
                 .restaurants(restaurantPreviews)
                 .build();
     }
@@ -140,4 +142,12 @@ public class RestaurantGraphQLController {
     ) {
         return restaurantService.getMostOrderedRestaurants(latitude, longitude);
     }
+
+    @MutationMapping
+    public AuthData restaurantLogin(@Argument String username,
+                                    @Argument String password,
+                                    @Argument String notificationToken) {
+        return restaurantService.login(username,password);
+    }
+
 }

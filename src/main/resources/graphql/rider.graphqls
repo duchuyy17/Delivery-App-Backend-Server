@@ -8,6 +8,8 @@ input RiderInput {
     available: Boolean
     vehicleType: String
     zone: String
+    notificationToken : String
+    timeZone:String
 }
 
 type Rider {
@@ -23,8 +25,25 @@ type Rider {
     bussinessDetails: BusinessDetails
     licenseDetails: LicenseDetails
     vehicleDetails: VehicleDetails
-}
+    accountNumber : String
+    createdAt : String
+    currentWalletAmount : Int
+    email : String
+    image : String
+    isActive : Boolean
+    location :LocationResponse
+    totalWalletAmount : Int
+    updatedAt : String
+    withdrawnWalletAmount : Int
+    timeZone : String
+    workSchedule : [DaySchedule]
 
+}
+type DaySchedule {
+    day : String
+    enabled : Boolean
+    slots : [Timings]
+}
 type BusinessDetails {
     bankName: String
     accountName: String
@@ -49,9 +68,18 @@ type VehicleDetails {
 extend type Query {
     riders: [Rider]
     rider(id: String!): Rider
+    riderOrders : [Order]
 }
 extend type Mutation {
     createRider(riderInput: RiderInput!): Rider
     deleteRider(id: String!): Rider
     editRider(riderInput: RiderInput!): Rider
+    riderLogin(
+        username: String
+        password: String
+        notificationToken: String
+        timeZone: String!
+    ): AuthData
+    updateRiderLocation(latitude: String!, longitude: String!): Rider
+
 }

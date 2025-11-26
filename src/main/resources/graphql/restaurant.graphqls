@@ -76,6 +76,8 @@ type Restaurant {
     rating: Float
     restaurantUrl: String
     zone : Zone
+    notificationToken: String
+    enableNotification : Boolean
 
 }
 type GeoJsonPoint {
@@ -246,6 +248,10 @@ type NearByRestaurantsPreview {
     sections: [SectionInfo]
     restaurants: [RestaurantPreview]
 }
+type RestaurantAuth{
+    token : String
+    restaurantId: String
+}
 
 extend type Mutation {
     createRestaurant(restaurant: RestaurantInput!, owner: ID!): Restaurant
@@ -262,6 +268,8 @@ extend type Mutation {
     updateTimings(id: String!, openingTimes: [TimingsInput]): Restaurant
     editRestaurant(restaurant: RestaurantProfileInput!): Restaurant
     updateRestaurantBussinessDetails(id: String!, bussinessDetails: BussinessDetailsInput): RestaurantResponse
+    RestaurantLogin(username:String!,password: String!,notificationToken: String): Owner
+    restaurantLogin(username:String!,password: String!,notificationToken: String): RestaurantAuth
 }
 # 🟢 Thêm phần Query mới
 extend type Query {

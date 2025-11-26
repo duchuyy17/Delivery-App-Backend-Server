@@ -3,6 +3,9 @@ package com.laptrinhjavaweb.news.mongo;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
+import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
+import org.hibernate.query.Order;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -45,6 +48,8 @@ public class UserDocument {
     private List<String> favourite = new ArrayList<>();
     private String notes;
 
+    @DBRef(lazy = true)
+    private List<OrderDocument> orders = new ArrayList<>();
 
     public long getCreatedAt() {
         return createdAt != null ? createdAt.getTime() : 0;

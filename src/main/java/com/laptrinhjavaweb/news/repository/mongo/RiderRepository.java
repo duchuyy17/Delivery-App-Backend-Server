@@ -4,4 +4,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.laptrinhjavaweb.news.mongo.RiderDocument;
 
-public interface RiderRepository extends MongoRepository<RiderDocument, String> {}
+import java.util.Optional;
+
+public interface RiderRepository extends MongoRepository<RiderDocument, String> {
+    Optional<RiderDocument> findByUsername(String username);
+}

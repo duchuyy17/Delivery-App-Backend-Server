@@ -35,4 +35,8 @@ type Food {
 
 extend type Mutation {
     createFood(foodInput: FoodInput!): Restaurant
+
+}
+extend type Query {
+    popularFoodItems(restaurantId: String!) : [Food]
 }

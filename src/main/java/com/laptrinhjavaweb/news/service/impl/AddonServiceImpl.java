@@ -18,6 +18,8 @@ import java.util.List;
 public class AddonServiceImpl implements AddonService {
     private final AddonRepository addonRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantTagService restaurantTagService;
+
     @Override
     public RestaurantDocument createAddons(CreateAddonInput createAddonInput) {
         RestaurantDocument restaurantDocument = restaurantRepository.findById(createAddonInput.getRestaurant())
@@ -39,6 +41,8 @@ public class AddonServiceImpl implements AddonService {
         } else {
             restaurantDocument.getAddons().addAll(addonSaved);
         }
-       return restaurantRepository.save(restaurantDocument);
+        RestaurantDocument restaurantSaved = restaurantRepository.save(restaurantDocument);
+        restaurantTagService.updateKeywordAndTag(restaurantSaved.getId());
+       return restaurantSaved;
     }
 }

@@ -1,7 +1,11 @@
 package com.laptrinhjavaweb.news.graphql;
 
+import java.text.ParseException;
 import java.util.List;
 
+import com.laptrinhjavaweb.news.dto.data.AuthData;
+import com.laptrinhjavaweb.news.mongo.OrderDocument;
+import com.laptrinhjavaweb.news.service.JwtService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -17,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RiderGraphQlController {
     private final RiderService riderService;
+    private final JwtService jwtService;
 
     @QueryMapping
     public List<RiderDocument> riders() {
@@ -35,11 +40,41 @@ public class RiderGraphQlController {
 
     @QueryMapping
     public RiderDocument rider(@Argument String id) {
-        return riderService.getRiderById(id);
+       RiderDocument riderDocument =  riderService.getRiderById(id);
+       riderDocument.setActive(true);
+
+        return riderDocument;
     }
 
     @MutationMapping
     public RiderDocument deleteRider(@Argument String id) {
         return riderService.deleteRider(id);
+    }
+
+    @MutationMapping
+    public AuthData riderLogin(
+            @Argument String username,
+            @Argument String password,
+            @Argument String notificationToken,
+            @Argument String timeZone
+    ) {
+        RiderInput req = new RiderInput();
+        req.setUsername(username);
+        req.setPassword(password);
+        req.setNotificationToken(notificationToken);
+        req.setTimeZone(timeZone);
+
+        return riderService.login(req);
+    }
+
+    @QueryMapping
+    public List<OrderDocument> riderOrders() throws ParseException {
+        String riderId = jwtService.getCurrentUserId();
+        return riderService.riderOrders(riderId);
+    }
+    @MutationMapping
+    public RiderDocument updateRiderLocation(@Argument String latitude,
+                                             @Argument String longitude) throws ParseException {
+        return riderService.updateRiderLocation(latitude, longitude);
     }
 }

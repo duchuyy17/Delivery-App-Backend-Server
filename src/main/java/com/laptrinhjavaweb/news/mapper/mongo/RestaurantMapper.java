@@ -1,5 +1,6 @@
 package com.laptrinhjavaweb.news.mapper.mongo;
 
+import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantDetailResponse;
 import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,6 +18,8 @@ public interface RestaurantMapper {
 
     @Mapping(target = "location", ignore = true)
     RestaurantResponse toRestaurantResponse(RestaurantDocument restaurantDocument);
+
+    RestaurantDetailResponse toRestaurantDetailResponse(RestaurantDocument restaurantDocument);
 
     RestaurantPreview toRestaurantPreview(RestaurantDocument restaurantDocument);
 

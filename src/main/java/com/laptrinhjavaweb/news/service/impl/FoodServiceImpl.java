@@ -25,6 +25,7 @@ public class FoodServiceImpl implements FoodService {
     private final CategoryRepository categoryRepository;
     private final RestaurantRepository restaurantRepository;
     private final VariationRepository variationRepository;
+    private final RestaurantTagService restaurantTagService;
     @Override
     public RestaurantDocument createFood(FoodInput input) {
         // Lấy thông tin nhà hàng
@@ -67,6 +68,13 @@ public class FoodServiceImpl implements FoodService {
             category.getFoods().addAll(foodSavedList);
         }
         categoryRepository.save(category);
+        restaurantTagService.updateKeywordAndTag(restaurant.getId());
         return restaurant;
+    }
+
+    @Override
+    public List<FoodDocument> getPopularFoodItems(String restaurantId) {
+        return foodRepository.findByRestaurant(restaurantId)
+                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOT_FOUND));
     }
 }

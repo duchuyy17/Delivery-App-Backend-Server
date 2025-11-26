@@ -19,6 +19,13 @@ type Variation {
     isOutOfStock: Boolean
 }
 
+type CategoryDetailsResponseForMobile{
+    id : String
+    category_name: String
+    url : String
+    food_id : String
+}
+
 
 input SubCategoryInput {
     _id: ID
@@ -37,4 +44,8 @@ input CategoryInput {
 extend type Mutation {
     createCategory(category: CategoryInput!): Restaurant
     editCategory(category: CategoryInput!): Restaurant
+}
+
+extend type Query {
+    fetchCategoryDetailsByStoreIdForMobile(storeId : String!) : [CategoryDetailsResponseForMobile]
 }

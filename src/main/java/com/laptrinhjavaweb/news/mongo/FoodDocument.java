@@ -31,4 +31,12 @@ public class FoodDocument {
     public String get_id(){
         return id;
     }
+
+    public String getDescription(){
+        if(description == null){
+            return "";
+        }
+        return description;
+    }
+
 }

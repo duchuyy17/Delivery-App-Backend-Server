@@ -8,6 +8,7 @@ type Addon {
 }
 
 input CreateAddonInput{
+    _id : String
     description : String
     quantityMaximum : Int
     quantityMinimum : Int

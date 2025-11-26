@@ -3,6 +3,8 @@ package com.laptrinhjavaweb.news.mongo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.laptrinhjavaweb.news.dto.data.*;
+import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
@@ -11,10 +13,6 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.laptrinhjavaweb.news.dto.data.BussinessDetails;
-import com.laptrinhjavaweb.news.dto.data.CircleBounds;
-import com.laptrinhjavaweb.news.dto.data.DeliveryInfo;
-import com.laptrinhjavaweb.news.dto.data.OpeningTimes;
 import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
 
 import lombok.AllArgsConstructor;
@@ -51,6 +49,9 @@ public class RestaurantDocument {
 
     @DBRef(lazy = true)
     private OwnerDocument owner;
+
+    @DBRef(lazy = true)
+    private ZoneDocument zone;
 
     @DBRef(lazy = true)
     private List<CategoryDocument> categories = new ArrayList<>();
@@ -102,4 +103,12 @@ public class RestaurantDocument {
         }
         return new GeoJsonPolygonResponse(deliveryBounds);
     }
+    public LocationResponse getLocation() {
+        if (location == null) {
+            return null;
+        }
+        return new LocationResponse(location);
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.laptrinhjavaweb.news.service;
 
 import java.util.List;
 
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import org.springframework.data.domain.PageRequest;
@@ -34,4 +35,5 @@ public interface RestaurantService {
     List<RestaurantDocument> findNearbyRestaurants(double longitude, double latitude, double radiusKm);
     List<RestaurantPreview> findNearByLocation(double longitude, double latitude, String shopType);
     List<RestaurantPreview> getMostOrderedRestaurants(Double latitude, Double longitude);
+    AuthData login(String username, String password);
 }

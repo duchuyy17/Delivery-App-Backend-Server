@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Document(collection = "variation")
 public class VariationDocument {
     @Id
@@ -20,4 +21,7 @@ public class VariationDocument {
     private Float discounted;
     private List<String> addons;
     private boolean isOutOfStock;
+    public String get_id(){
+        return id;
+    }
 }

@@ -18,6 +18,8 @@ import java.util.List;
 public class OptionServiceImpl implements OptionService {
     private final RestaurantRepository restaurantRepository;
     private final OptionRepository optionRepository;
+    private final RestaurantTagService restaurantTagService;
+
     @Override
     public RestaurantDocument createOptions(CreateOptionInput input) {
         // 1️⃣ Lấy nhà hàng theo ID
@@ -41,6 +43,8 @@ public class OptionServiceImpl implements OptionService {
         }
 
         // 4️⃣ Lưu nhà hàng (cập nhật options)
-        return restaurantRepository.save(restaurant);
+        RestaurantDocument restaurantSaved = restaurantRepository.save(restaurant);
+        restaurantTagService.updateKeywordAndTag(restaurantSaved.getId());
+        return restaurantSaved;
     }
 }

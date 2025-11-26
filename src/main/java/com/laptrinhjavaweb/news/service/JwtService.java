@@ -5,4 +5,6 @@ import java.text.ParseException;
 
 public interface JwtService {
     String getCurrentUserId() throws ParseException;
+
+    String generateToken(Object authData);
 }

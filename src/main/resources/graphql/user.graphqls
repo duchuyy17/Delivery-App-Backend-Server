@@ -26,17 +26,29 @@ type User {
 }
 type Address {
     _id : String
-    location : Point
+    location : LocationResponse
     deliveryAddress : String
     details: String
     label: String
     selected: Boolean
+}
+input AddressInput{
+    longitude : String
+    latitude : String
+    deliveryAddress : String
+    details : String
+    label : String
+}
+type LocationResponse{
+    coordinates: [String]
 }
 extend type Mutation {
     createUser(userInput: CreateUserInput!): AuthData
     emailExist(email: String!): User
     phoneExist(phone: String!): User
     updateUser(updateUserInput: CreateUserInput!): User
+    createAddress(addressInput: AddressInput!) : User
+    selectAddress(id : String!) : User
 }
 extend type Query {
     users : [User]

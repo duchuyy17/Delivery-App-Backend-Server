@@ -18,6 +18,7 @@ public class ZoneDocument {
 
     private String title;
     private String description;
+    private Float tax;
     // Dữ liệu tọa độ đa giác (Polygon)
 
     private GeoJsonPolygon location;

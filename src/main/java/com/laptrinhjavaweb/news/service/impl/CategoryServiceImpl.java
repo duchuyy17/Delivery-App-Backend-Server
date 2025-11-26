@@ -1,9 +1,11 @@
 package com.laptrinhjavaweb.news.service.impl;
 
 import com.laptrinhjavaweb.news.dto.request.mongo.CategoryInput;
+import com.laptrinhjavaweb.news.dto.response.mongo.CategoryDetailsResponseForMobile;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.CategoryDocument;
+import com.laptrinhjavaweb.news.mongo.FoodDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
 import com.laptrinhjavaweb.news.mongo.SubCategoryDocument;
 import com.laptrinhjavaweb.news.repository.mongo.CategoryRepository;
@@ -25,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final RestaurantService restaurantService;
     private final RestaurantRepository restaurantRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final RestaurantTagService restaurantTagService;
 
     @Override
     public RestaurantDocument createCategory(CategoryInput input) {
@@ -59,7 +62,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryDocument> categories = restaurantDocument.getCategories();
         categories.add(category);
         restaurantDocument.setCategories(categories);
-        return restaurantRepository.save(restaurantDocument);
+        RestaurantDocument restaurantSaved = restaurantRepository.save(restaurantDocument);
+        restaurantTagService.updateKeywordAndTag(input.getRestaurant());
+        return restaurantSaved;
 
     }
 
@@ -110,5 +115,35 @@ public class CategoryServiceImpl implements CategoryService {
         // Trả về lại Restaurant chứa categories
 
         return restaurantService.findById(input.getRestaurant());
+    }
+
+    @Override
+    public List<CategoryDetailsResponseForMobile> fetchCategoryDetailsByStoreIdForMobile(String storeId) {
+        RestaurantDocument restaurantDocument = restaurantService.findById(storeId);
+        List<CategoryDocument> categoryDocuments = categoryRepository.findByRestaurant(restaurantDocument)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        List<CategoryDetailsResponseForMobile> categoryDetailsResponseForMobiles = categoryDocuments.stream().map(categoryDocument -> {
+            CategoryDetailsResponseForMobile response = new CategoryDetailsResponseForMobile();
+            response.setId(categoryDocument.getId());
+            response.setCategory_name(categoryDocument.getTitle());
+
+            // Lấy food (an toàn)
+            FoodDocument food = null;
+            if (categoryDocument.getFoods() != null && !categoryDocument.getFoods().isEmpty()) {
+                food = categoryDocument.getFoods().getFirst();
+                response.setFood_id(food.getId());
+            } else {
+                response.setFood_id(null); // hoặc "" tùy bạn
+            }
+
+            if(categoryDocument.getImage() == null){
+                if(food == null){
+                    response.setUrl("");
+                }
+                response.setUrl(food.getImage());
+            }else response.setUrl(categoryDocument.getImage());
+            return response;
+        }).toList();
+        return categoryDetailsResponseForMobiles;
     }
 }

@@ -1,0 +1,17 @@
+type Tip {
+    _id : String
+    tipVariations : [Int]
+    enabled : Boolean
+}
+input TippingInput{
+    _id : String
+    tipVariations : [Int]
+    enabled : Boolean
+}
+extend type Query {
+    tips : Tip
+}
+extend type Mutation {
+    createTip(tip : TippingInput) : Tip
+    editTipping(tippingInput: TippingInput!): Tip
+}
