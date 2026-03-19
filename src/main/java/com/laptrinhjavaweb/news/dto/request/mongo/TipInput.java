@@ -1,8 +1,8 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class TipInput {
@@ -10,7 +10,8 @@ public class TipInput {
     private String _id;
     private List<Integer> tipVariations;
     private Boolean enabled;
-    public String getId(){
+
+    public String getId() {
         return _id;
     }
 }

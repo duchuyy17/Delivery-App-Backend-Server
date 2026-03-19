@@ -1,17 +1,20 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.List;
+
+import org.bson.types.Decimal128;
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.dto.request.mongo.CreateOptionInput;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.OptionDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
-import com.laptrinhjavaweb.news.repository.mongo.OptionRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
+import com.laptrinhjavaweb.news.repository.OptionRepository;
+import com.laptrinhjavaweb.news.repository.RestaurantRepository;
 import com.laptrinhjavaweb.news.service.OptionService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,8 @@ public class OptionServiceImpl implements OptionService {
     @Override
     public RestaurantDocument createOptions(CreateOptionInput input) {
         // 1️⃣ Lấy nhà hàng theo ID
-        RestaurantDocument restaurant = restaurantRepository.findById(input.getRestaurant())
+        RestaurantDocument restaurant = restaurantRepository
+                .findById(input.getRestaurant())
                 .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
 
         // 2️⃣ Tạo danh sách OptionDocument mới
@@ -31,7 +35,7 @@ public class OptionServiceImpl implements OptionService {
                 .map(opt -> OptionDocument.builder()
                         .title(opt.getTitle())
                         .description(opt.getDescription())
-                        .price(opt.getPrice())
+                        .price(new Decimal128(opt.getPrice()))
                         .build())
                 .toList();
         List<OptionDocument> newOptions = optionRepository.saveAll(options);

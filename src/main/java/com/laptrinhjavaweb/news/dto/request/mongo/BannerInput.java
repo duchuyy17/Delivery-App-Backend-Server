@@ -1,8 +1,8 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.Map;
+
+import lombok.Data;
 
 @Data
 public class BannerInput {
@@ -14,7 +14,8 @@ public class BannerInput {
     private String file;
     private String screen;
     private Map<String, Object> parameters;
-    public String getId(){
+
+    public String getId() {
         return _id;
     }
 }

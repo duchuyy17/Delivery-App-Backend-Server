@@ -71,12 +71,56 @@ type Review{
     rating : Float
 }
 type Chat{
-    user : String
+    id: String
+    createdAt: String
+    user : User
     message : String
     images : [String]
     isActive : Boolean
 }
+type UserResponse {
+    id: ID!
+    name: String!
+}
 type Order {
+    id : String
+    _id: ID
+    orderId: String
+    restaurant: RestaurantDetail
+    deliveryAddress: OrderAddress
+    items: [Item]
+    user: User
+    rider: Rider
+    paymentMethod: String
+    paidAmount: Float
+    orderAmount: Float
+    orderStatus: String
+    orderDate: String
+    expectedTime: String
+    tipping: Float
+    taxationAmount: Float
+    deliveryCharges: Float
+    instructions: String
+    review : Review
+    isPickedUp : Boolean
+    createdAt : String
+    completionTime: String
+    preparationTime : String
+    acceptedAt : String
+    pickedAt : String
+    deliveredAt : String
+    cancelledAt : String
+    assignedAt : String
+    paymentStatus : String
+    zone : Zone
+    status : Boolean
+    reason : String
+    isActive : Boolean
+    isRiderRinged : Boolean
+    chat : Chat
+}
+
+type OrderWithoutChat {
     id : String
     _id: ID
     orderId: String
@@ -110,8 +154,6 @@ type Order {
     reason : String
     isActive : Boolean
     isRiderRinged : Boolean
-    chat : Chat
-
 }
 
 extend type Mutation {
@@ -130,8 +172,34 @@ extend type Mutation {
     ): Order
     acceptOrder(_id: String!, time: String): Order
     assignOrder(id: String!): Order
+    updateOrderStatusRider(id: String!, status: String!): Order
+    abortOrder(id: String!): Order
+    assignRider(id: String!, riderId: String!): Order
+    updateStatus(id: String!, orderStatus: String!): Order
 }
 extend type Query {
     orders(offset: Int): [Order]
     ordersByRestIdWithoutPagination(restaurant: String!, search: String): [Order]
+    allOrdersWithoutPagination(
+        dateKeyword: String
+        starting_date: String
+        ending_date: String
+    ): [Order]
+    getActiveOrders(
+        restaurantId: ID
+        page: Int
+        rowsPerPage: Int
+        actions: [String]
+        search: String
+    ): OrderPagination
+    haversineDistance(
+        lat1: Float!
+        lng1: Float!
+        lat2: Float!
+        lng2: Float!
+    ): Float!
+}
+type OrderPagination {
+    totalCount: Int
+    orders: [Order]
 }

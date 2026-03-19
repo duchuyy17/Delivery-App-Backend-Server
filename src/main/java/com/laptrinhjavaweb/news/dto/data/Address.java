@@ -13,7 +13,8 @@ public class Address {
     private String details;
     private String label;
     private boolean selected;
-    public String getId(){
+
+    public String getId() {
         return _id;
     }
 }

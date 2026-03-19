@@ -13,5 +13,5 @@ public class BussinessDetails {
     String accountCode;
     String bussinessRegNo;
     String companyRegNo;
-    Float taxRate;
+    Double taxRate;
 }

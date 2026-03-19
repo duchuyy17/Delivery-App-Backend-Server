@@ -2,13 +2,11 @@ package com.laptrinhjavaweb.news;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
-@EntityScan(basePackages = "com.laptrinhjavaweb.news.entity")
-@EnableMongoRepositories(basePackages = "com.laptrinhjavaweb.news.repository.mongo")
+@EnableMongoRepositories(basePackages = "com.laptrinhjavaweb.news.repository")
 public class NewSpringbootApplication {
 
     public static void main(String[] args) {

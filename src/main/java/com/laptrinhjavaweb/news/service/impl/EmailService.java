@@ -1,21 +1,24 @@
 package com.laptrinhjavaweb.news.service.impl;
 
-import com.laptrinhjavaweb.news.dto.data.Otp;
-import com.laptrinhjavaweb.news.dto.data.VerifyOtp;
-import lombok.RequiredArgsConstructor;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import com.laptrinhjavaweb.news.dto.data.Otp;
+import com.laptrinhjavaweb.news.dto.data.VerifyOtp;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender mailSender;
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -68,5 +71,4 @@ public class EmailService {
         System.out.println("❌ OTP verification failed for key: " + key);
         return VerifyOtp.builder().result(false).build();
     }
-
 }

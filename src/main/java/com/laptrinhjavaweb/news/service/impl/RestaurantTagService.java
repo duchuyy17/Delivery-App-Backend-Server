@@ -1,20 +1,21 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.CategoryDocument;
 import com.laptrinhjavaweb.news.mongo.FoodDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
+import com.laptrinhjavaweb.news.repository.FoodRepository;
+import com.laptrinhjavaweb.news.repository.RestaurantRepository;
 
-import com.laptrinhjavaweb.news.repository.mongo.FoodRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class RestaurantTagService {
 
     public void updateKeywordAndTag(String restaurantId) {
 
-        RestaurantDocument restaurant = restaurantRepository.findById(restaurantId)
+        RestaurantDocument restaurant = restaurantRepository
+                .findById(restaurantId)
                 .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
 
         Set<String> tags = new HashSet<>(generateBasicTags(restaurant));
@@ -34,13 +36,14 @@ public class RestaurantTagService {
             tags.add(c.getTitle());
             keywords.add(c.getTitle());
         }
-        List<FoodDocument> foods = foodRepository.findByRestaurant(restaurantId)
+        List<FoodDocument> foods = foodRepository
+                .findByRestaurant(restaurantId)
                 .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOT_FOUND));
         for (FoodDocument f : foods) {
             if (f.getTitle() != null) {
                 keywords.add(f.getTitle());
             }
-//             5️⃣ Variations → keywords
+            //             5️⃣ Variations → keywords
             if (f.getVariations() != null) {
                 f.getVariations().forEach(variation -> {
                     if (variation.getTitle() != null) {
@@ -49,13 +52,12 @@ public class RestaurantTagService {
                 });
             }
         }
-//         6️⃣ Addons → keywords
+        //         6️⃣ Addons → keywords
         if (restaurant.getAddons() != null) {
             restaurant.getAddons().forEach(addon -> {
                 if (addon.getTitle() != null) {
                     keywords.add(addon.getTitle());
                 }
-
             });
         }
         // 7️⃣ Options → keywords
@@ -78,5 +80,4 @@ public class RestaurantTagService {
         if (r.getSlug() != null) list.add(r.getSlug());
         return list;
     }
-
 }

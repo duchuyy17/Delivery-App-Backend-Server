@@ -2,11 +2,11 @@ package com.laptrinhjavaweb.news.service.impl;
 
 import java.util.List;
 
-import com.laptrinhjavaweb.news.service.CuisineService;
 import org.springframework.stereotype.Service;
 
 import com.laptrinhjavaweb.news.mongo.CuisineDocument;
-import com.laptrinhjavaweb.news.repository.mongo.CuisineRepository;
+import com.laptrinhjavaweb.news.repository.CuisineRepository;
+import com.laptrinhjavaweb.news.service.CuisineService;
 
 import lombok.RequiredArgsConstructor;
 

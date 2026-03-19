@@ -73,6 +73,7 @@ type Restaurant {
     addons : [Addon]
     reviewCount : Int
     reviewData : ReviewData
+    reviewAverage : Float
     rating: Float
     restaurantUrl: String
     zone : Zone
@@ -230,6 +231,37 @@ type RestaurantPreview {
     location: Point
     openingTimes: [OpeningTimes]
 }
+type RestaurantPreviewV2 {
+    _id: ID
+    orderId: Int
+    orderPrefix: String
+    name: String
+    image: String
+    logo: String
+    address: String
+    username: String
+    password: String
+    deliveryTime: Int
+    minimumOrder: Float
+    sections: [String]
+    rating: Float
+    isActive: Boolean
+    isAvailable: Boolean
+    slug: String
+    stripeDetailsSubmitted: Boolean
+    commissionRate: Float
+    tax: Float
+    notificationToken: String
+    enableNotification: Boolean
+    shopType: String
+    cuisines: [Cuisine]
+    keywords: [String]
+    tags: [String]
+    reviewCount: Int
+    reviewAverage: Float
+    location: Point
+    openingTimes: [OpeningTimes]
+}
 type SectionInfo {
     _id: ID
     name: String
@@ -246,7 +278,7 @@ type Offer {
 type NearByRestaurantsPreview {
     offers: [Offer]
     sections: [SectionInfo]
-    restaurants: [RestaurantPreview]
+    restaurants: [RestaurantPreviewV2]
 }
 type RestaurantAuth{
     token : String
@@ -270,6 +302,7 @@ extend type Mutation {
     updateRestaurantBussinessDetails(id: String!, bussinessDetails: BussinessDetailsInput): RestaurantResponse
     RestaurantLogin(username:String!,password: String!,notificationToken: String): Owner
     restaurantLogin(username:String!,password: String!,notificationToken: String): RestaurantAuth
+    updateCommission(id: String!, commissionRate: Float!): Restaurant
 }
 # 🟢 Thêm phần Query mới
 extend type Query {
@@ -279,6 +312,7 @@ extend type Query {
     restaurants: [Restaurant]
     nearbyRestaurants(longitude: Float, latitude:Float, radiusKm: Int) : [Restaurant]
     nearByRestaurantsPreview(latitude: Float, longitude: Float, shopType: String): NearByRestaurantsPreview
-    mostOrderedRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
-    recentOrderRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreview!]!
+    mostOrderedRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreviewV2!]!
+    recentOrderRestaurantsPreview(latitude: Float!, longitude: Float!): [RestaurantPreviewV2!]!
+    topRatedVendorsPreview(latitude: Float!, longitude: Float!): [RestaurantPreviewV2]
 }

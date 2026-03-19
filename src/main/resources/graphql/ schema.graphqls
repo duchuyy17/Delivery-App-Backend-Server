@@ -1,10 +1,40 @@
 type Query {
     _dummy: String
+    getTrafficFactor(lat1: Float!, lng1: Float!, lat2: Float!, lng2: Float!): Float
+    getTravelTimeSeconds(originLat: Float!, originLng: Float!, destinationLat: Float!, destinationLng: Float!): Int
 }
 
 type Mutation {
 
+}
+type Subscription {
+    subscriptionRiderLocation(riderId: String!): Rider
+    subscriptionOrder(id: String!): Order
+    orderStatusChanged(userId: String!): OrderStatusChangedPayload
+    subscriptionMatchOrders(riderId: String!): ZoneOrderSubscriptionPayload
+    subscriptionAssignRider(riderId: String!): AssignRiderSubscriptionPayload!
+    riderLocationUpdated: Rider
+    riderUpdated : Rider
+    subscriptionNewMessage(order: ID!): ChatMessageOutput!
+}
+type RiderLocation {
+    _id: ID!
+    location: LocationResponse!
+}
+type OrderStatusChangedPayload {
+    userId: String
+    origin: String
+    order: Order
+}
+type AssignRiderSubscriptionPayload {
+    order: Order
+    origin: String
+}
 
+type ZoneOrderSubscriptionPayload {
+    riderId: String
+    origin: String
+    order: Order
 }
 
 type AuthenticationResponse {

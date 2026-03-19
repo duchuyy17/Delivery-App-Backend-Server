@@ -1,0 +1,66 @@
+type PercentageChange {
+    usersPercent: Int
+    vendorsPercent: Int
+    restaurantsPercent: Int
+    ridersPercent: Int
+}
+
+type DashboardCounts {
+    usersCount: [Int]
+    vendorsCount: [Int]
+    restaurantsCount: [Int]
+    ridersCount: [Int]
+    percentageChange: PercentageChange
+}
+type DashboardUsers {
+    usersCount: Int
+    vendorsCount: Int
+    restaurantsCount: Int
+    ridersCount: Int
+}
+type DashboardOrdersByType {
+    value: Int
+    label: String
+}
+
+type VendorDashboardGrowthDetails {
+    totalRestaurants: [Int]
+    totalOrders: [Int]
+    totalSales: [Float]
+}
+
+type RestaurantDashboardDetails {
+    salesAmount: [Int]!
+    ordersCount: [Float]!
+}
+
+extend type Query {
+    getDashboardUsersByYear(year: Int!): DashboardCounts
+    getVendorDashboardGrowthDetailsByYear(
+        vendorId: String!
+        year: Int!
+    ): VendorDashboardGrowthDetails
+    getRestaurantDashboardSalesOrderCountDetailsByYear(
+        restaurant: String!
+        year: Int!
+    ): RestaurantDashboardDetails!
+    getDashboardUsers: DashboardUsers!
+    getDashboardOrdersByType: [DashboardOrdersByType!]!
+    getDashboardSalesByType: [DashboardSalesByType!]!
+    getRestaurantDashboardOrdersSalesStats(
+        restaurant: String!
+        starting_date: String!
+        ending_date: String!
+        dateKeyword: String
+    ): RestaurantDashboardOrders
+}
+type RestaurantDashboardOrders {
+    totalOrders: Int
+    totalSales: Float
+    totalCODOrders: Int
+    totalCardOrders: Int
+}
+type DashboardSalesByType {
+    value: Float
+    label: String
+}

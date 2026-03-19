@@ -4,12 +4,8 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import com.laptrinhjavaweb.news.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.laptrinhjavaweb.news.dto.request.IntrospectRequest;
@@ -22,11 +18,7 @@ import com.laptrinhjavaweb.news.dto.response.UserResponse;
 import com.laptrinhjavaweb.news.entity.InvalidToken;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
-import com.laptrinhjavaweb.news.mapper.mongo.UserMapperV1;
-import com.laptrinhjavaweb.news.mongo.RoleDocument;
-import com.laptrinhjavaweb.news.mongo.UserDocument;
-import com.laptrinhjavaweb.news.repository.InvalidTokenRepository;
-import com.laptrinhjavaweb.news.repository.mongo.UserV1Repository;
+import com.laptrinhjavaweb.news.service.AuthenticationService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -40,9 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationImpl implements AuthenticationService {
-    private final UserV1Repository userRepository;
-    private final UserMapperV1 userMapper;
-    private final InvalidTokenRepository invalidTokenRepository;
+    //    private final UserV1Repository userRepository;
+    //    private final UserMapperV1 userMapper;
 
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
@@ -55,24 +46,26 @@ public class AuthenticationImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse login(String username, String password) {
-        log.info("signKey: {}", SIGNER_KEY);
-        UserDocument user =
-                userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(password, user.getPassword());
-        if (!authenticated) {
-            throw new AppException(ErrorCode.UNAUTHETICATED);
-        }
-        UserResponse userResponse = userMapper.toUserResponse(user);
-        var token = generateToken(userResponse);
-
-        return AuthenticationResponse.builder()
-                .isSuccessful(true)
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .token(token)
-                .phone(user.getPhone())
-                .build();
+        //        log.info("signKey: {}", SIGNER_KEY);
+        //        UserDocument user =
+        //                userRepository.findByUserName(username).orElseThrow(() -> new
+        // AppException(ErrorCode.USER_NOT_EXISTED));
+        //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        //        boolean authenticated = passwordEncoder.matches(password, user.getPassword());
+        //        if (!authenticated) {
+        //            throw new AppException(ErrorCode.UNAUTHETICATED);
+        //        }
+        //        UserResponse userResponse = userMapper.toUserResponse(user);
+        //        var token = generateToken(userResponse);
+        //
+        //        return AuthenticationResponse.builder()
+        //                .isSuccessful(true)
+        //                .fullName(user.getFullName())
+        //                .email(user.getEmail())
+        //                .token(token)
+        //                .phone(user.getPhone())
+        //                .build();
+        return null;
     }
 
     @Override
@@ -95,7 +88,7 @@ public class AuthenticationImpl implements AuthenticationService {
                     .id(signedJWT.getJWTClaimsSet().getJWTID())
                     .expiryTime(signedJWT.getJWTClaimsSet().getExpirationTime())
                     .build();
-            invalidTokenRepository.save(invalidToken);
+
         } catch (AppException e) {
             throw new AppException(ErrorCode.TOKEN_ALREADY_EXPIRED);
         }
@@ -103,21 +96,23 @@ public class AuthenticationImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
-        SignedJWT signedJWT = verifyToken(request.getToken(), true);
-        var expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-        var username = signedJWT.getJWTClaimsSet().getSubject();
-
-        InvalidToken invalidToken = InvalidToken.builder()
-                .id(signedJWT.getJWTClaimsSet().getJWTID())
-                .expiryTime(expirationTime)
-                .build();
-        invalidTokenRepository.save(invalidToken);
-
-        UserResponse user = userMapper.toUserResponse(
-                userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHETICATED)));
-        String token = generateToken(user);
-
-        return AuthenticationResponse.builder().token(token).isSuccessful(true).build();
+        //        SignedJWT signedJWT = verifyToken(request.getToken(), true);
+        //        var expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        //        var username = signedJWT.getJWTClaimsSet().getSubject();
+        //
+        //        InvalidToken invalidToken = InvalidToken.builder()
+        //                .id(signedJWT.getJWTClaimsSet().getJWTID())
+        //                .expiryTime(expirationTime)
+        //                .build();
+        //
+        //
+        //        UserResponse user = userMapper.toUserResponse(
+        //                userRepository.findByUserName(username).orElseThrow(() -> new
+        // AppException(ErrorCode.UNAUTHETICATED)));
+        //        String token = generateToken(user);
+        //
+        //        return AuthenticationResponse.builder().token(token).isSuccessful(true).build();
+        return null;
     }
 
     @Override
@@ -140,8 +135,7 @@ public class AuthenticationImpl implements AuthenticationService {
                         .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHETICATED);
-        if (invalidTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-            throw new AppException(ErrorCode.UNAUTHETICATED);
+
         return signedJWT;
     }
 

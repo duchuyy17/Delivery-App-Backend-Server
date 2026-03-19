@@ -1,0 +1,107 @@
+extend type Query {
+    earnings(
+        userId: String
+        userType: UserTypeEnum
+        orderType: OrderTypeEnum
+        paymentMethod: PaymentMethodEnum
+        search: String
+        pagination: PaginationInput!
+        dateFilter : DateFilterInput
+
+    ): EarningsResponse
+}
+extend type Mutation {
+    saveEarning(input: SaveEarningInput!): SaveEarningResponse
+}
+type SaveEarningResponse {
+    success: Boolean
+    message: String
+    data: Earning
+}
+
+input SaveEarningInput {
+    orderId: String!
+    orderType: String!
+    paymentMethod: String!
+
+    marketplaceCommission: Float!
+    deliveryCommission: Float!
+    tax: Float!
+    platformFee: Float!
+
+    riderId: String!
+    deliveryFee: Float!
+    tip: Float!
+
+    storeId: String!
+    orderAmount: Float!
+}
+
+input DateFilterInput {
+    starting_date: String
+    ending_date: String
+}
+enum OrderTypeEnum {
+    PICKUP
+    DELIVERY
+}
+enum PaymentMethodEnum {
+    COD
+    PAYPAL
+    STRIPE
+}
+type EarningsResponse {
+    success: Boolean
+    message: String
+    data: EarningsData
+    pagination: Pagination
+}
+
+type EarningsData {
+    earnings: [Earning]
+    grandTotalEarnings: GrandTotalEarnings
+}
+
+type Earning {
+    _id: ID
+    orderId: String
+    orderType: OrderTypeEnum
+    paymentMethod: PaymentMethodEnum
+    createdAt: String
+    updatedAt: String
+    platformEarnings: PlatformEarnings
+    riderEarnings: RiderEarnings
+    storeEarnings: StoreEarnings
+}
+
+type PlatformEarnings {
+    marketplaceCommission: Float
+    deliveryCommission: Float
+    tax: Float
+    platformFee: Float
+    totalEarnings: Float
+}
+
+type RiderEarnings {
+    riderId: Rider
+    deliveryFee: Float
+    tip: Float
+    totalEarnings: Float
+}
+
+type StoreEarnings {
+    storeId: Restaurant
+    orderAmount: Float
+    totalEarnings: Float
+}
+type GrandTotalEarnings {
+    platformTotal: Float
+    riderTotal: Float
+    storeTotal: Float
+}
+
+type Pagination {
+    total: Int
+}
+
+

@@ -27,6 +27,8 @@ public class OwnerDocument {
     @JsonProperty("_id")
     private String id;
 
+    private String userId;
+
     @Field("unique_id")
     private String uniqueId;
 

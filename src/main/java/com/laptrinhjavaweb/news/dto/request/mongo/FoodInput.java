@@ -1,8 +1,8 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class FoodInput {
@@ -15,5 +15,4 @@ public class FoodInput {
     private String image;
     private boolean isActive;
     private boolean isOutOfStock;
-
 }

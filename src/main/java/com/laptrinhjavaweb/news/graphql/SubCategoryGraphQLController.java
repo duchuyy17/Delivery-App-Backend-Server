@@ -1,15 +1,17 @@
 package com.laptrinhjavaweb.news.graphql;
 
-import com.laptrinhjavaweb.news.dto.request.mongo.SubCategoryInput;
-import com.laptrinhjavaweb.news.mongo.SubCategoryDocument;
-import com.laptrinhjavaweb.news.service.SubCategoryService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
+import com.laptrinhjavaweb.news.dto.request.mongo.SubCategoryInput;
+import com.laptrinhjavaweb.news.mongo.SubCategoryDocument;
+import com.laptrinhjavaweb.news.service.SubCategoryService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class SubCategoryGraphQLController {
     public String deleteSubCategory(@Argument("_id") String id) {
         return subCategoryService.deleteSubCategory(id);
     }
+
     @QueryMapping
     public List<SubCategoryDocument> subCategories() {
         return subCategoryService.getAllSubCategories();

@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.*;
-
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -21,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Document(collection = "roles") // tương đương với @Table(name = "role")
 public class RoleDocument {
 
-    @Id
     private String id; // MongoDB dùng id kiểu String (ObjectId)
 
     private String code;

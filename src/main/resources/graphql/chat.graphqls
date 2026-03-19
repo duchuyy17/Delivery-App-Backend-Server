@@ -1,0 +1,29 @@
+extend type Query {
+    chat(order: ID!): [Chat!]!
+}
+extend type Mutation {
+    sendChatMessage(orderId: ID!, message: ChatMessageInput!): ChatMessageResponse!
+}
+input ChatMessageInput {
+    message: String!
+    user: ChatUserInput!
+}
+input ChatUserInput {
+    id: ID!
+    name: String!
+}
+type ChatMessageResponse {
+    success: Boolean!
+    message: String
+    data: ChatMessageOutput
+}
+type ChatMessageOutput {
+    id: ID!
+    message: String!
+    user: ChatUserOutput!
+    createdAt: String!
+}
+type ChatUserOutput {
+    id: ID!
+    name: String!
+}

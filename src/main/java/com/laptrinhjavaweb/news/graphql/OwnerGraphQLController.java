@@ -12,9 +12,12 @@ import com.laptrinhjavaweb.news.constant.UserTypeConstant;
 import com.laptrinhjavaweb.news.dto.request.mongo.StaffInput;
 import com.laptrinhjavaweb.news.dto.request.mongo.VendorInput;
 import com.laptrinhjavaweb.news.dto.response.mongo.VendorResponse;
+import com.laptrinhjavaweb.news.exception.AppException;
+import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.OwnerDocument;
 import com.laptrinhjavaweb.news.service.AuthenticationService;
 import com.laptrinhjavaweb.news.service.OwnerService;
+import com.laptrinhjavaweb.news.service.RecaptchaService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OwnerGraphQLController {
     private final OwnerService OwnerService;
     private final AuthenticationService<OwnerDocument> authenticationService;
+    private final RecaptchaService recaptchaService;
 
     @MutationMapping
     public OwnerDocument createVendor(@Argument("vendorInput") VendorInput input) {
@@ -69,7 +73,14 @@ public class OwnerGraphQLController {
     }
     // ok
     @MutationMapping
-    public OwnerDocument ownerLogin(@Argument String email, @Argument String password) {
+    public OwnerDocument ownerLogin(
+            @Argument String email, @Argument String password, @Argument String recaptchaToken) {
+        log.info("recaptchaCode: {}", recaptchaToken);
+        boolean valid = recaptchaService.verify(recaptchaToken);
+
+        if (!valid) {
+            throw new AppException(ErrorCode.INVALID_RECAPTCHA);
+        }
         return authenticationService.login(email, password);
     }
 

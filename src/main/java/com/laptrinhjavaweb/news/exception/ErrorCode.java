@@ -32,15 +32,22 @@ public enum ErrorCode {
     ZONE_NOT_FOUND(1018, "Phạm vi giao hàng không tồn tại!", HttpStatus.BAD_REQUEST),
     RIDER_NOT_FOUND(1019, "Không tìm thấy tài xế!", HttpStatus.NOT_FOUND),
     STAFF_NOT_FOUND(1020, "Không tìm thấy quản trị viên!", HttpStatus.NOT_FOUND),
-    CATEGORY_NOT_FOUND(1021,"Không tìm thấy danh mục!",HttpStatus.NOT_FOUND),
-    SUBCATEGORY_NOT_FOUND(1022,"Không tìm thấy danh mục con!",HttpStatus.NOT_FOUND),
-    COUPON_NOT_FOUND(1023,"Không tìm thấy mã giảm giá",HttpStatus.NOT_FOUND),
-    LOGIN_TYPE_NOT_SUPPORT(1024,"Chưa hỗ trợ loại đăng nhập này" ,HttpStatus.BAD_REQUEST),
-    FOOD_NOT_FOUND(1025,"Không tìm thấy sản phẩm nào",HttpStatus.NOT_FOUND),
-    ADDRESS_NOT_FOUND(1026,"Không tìm thấy địa chỉ hợp lệ!",HttpStatus.NOT_FOUND),
-    TIP_NOT_FOUND(1027,"Không tìm thấy tip!",HttpStatus.NOT_FOUND),
-    VARIATION_NOT_FOUND(1028,"Không tìm thấy variation!",HttpStatus.NOT_FOUND),
-    ORDER_NOT_FOUND(1029,"Không tìm thấy order!",HttpStatus.NOT_FOUND);
+    CATEGORY_NOT_FOUND(1021, "Không tìm thấy danh mục!", HttpStatus.NOT_FOUND),
+    SUBCATEGORY_NOT_FOUND(1022, "Không tìm thấy danh mục con!", HttpStatus.NOT_FOUND),
+    COUPON_NOT_FOUND(1023, "Không tìm thấy mã giảm giá", HttpStatus.NOT_FOUND),
+    LOGIN_TYPE_NOT_SUPPORT(1024, "Chưa hỗ trợ loại đăng nhập này", HttpStatus.BAD_REQUEST),
+    FOOD_NOT_FOUND(1025, "Không tìm thấy sản phẩm nào", HttpStatus.NOT_FOUND),
+    ADDRESS_NOT_FOUND(1026, "Không tìm thấy địa chỉ hợp lệ!", HttpStatus.NOT_FOUND),
+    TIP_NOT_FOUND(1027, "Không tìm thấy tip!", HttpStatus.NOT_FOUND),
+    VARIATION_NOT_FOUND(1028, "Không tìm thấy variation!", HttpStatus.NOT_FOUND),
+    ORDER_NOT_FOUND(1029, "Không tìm thấy order!", HttpStatus.NOT_FOUND),
+    ORDER_ALREADY_ASSIGNED(1030, "Đơn hàng này đã được giao rồi!", HttpStatus.BAD_REQUEST),
+    RIDER_NOT_ASSIGNED(1031, "Tài xế không được phân đơn hàng này!", HttpStatus.BAD_REQUEST),
+    ORDER_STATUS_INVALID(1032, "Flow đơn hàng không hợp lệ!", HttpStatus.BAD_REQUEST),
+    RIDER_IN_DELIVERY(1033, "Tài xế đang bận!", HttpStatus.BAD_REQUEST),
+    INVALID_RECAPTCHA(1034, "Recaptcha không hợp lệ", HttpStatus.BAD_REQUEST),
+    RIDER_STATS_NOT_FOUND(1035, "Không tìm thấy riderstats!", HttpStatus.NOT_FOUND),
+    ;
 
     ErrorCode(int code, String message, HttpStatusCode status) {
         this.code = code;

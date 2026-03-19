@@ -1,5 +1,6 @@
 type User {
     _id: String
+    id: String
     userName: String!
     name : String
     createdAt: String
@@ -49,11 +50,13 @@ extend type Mutation {
     updateUser(updateUserInput: CreateUserInput!): User
     createAddress(addressInput: AddressInput!) : User
     selectAddress(id : String!) : User
+    addFavourite(id: String!): User
 }
 extend type Query {
     users : [User]
     user(id: ID!): User
     profile: User
+    userFavourite(latitude: Float, longitude: Float): [Restaurant]
 }
 input CreateUserInput {
     phone: String

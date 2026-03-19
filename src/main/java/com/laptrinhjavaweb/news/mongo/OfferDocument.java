@@ -1,13 +1,14 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Document("offer")
 @AllArgsConstructor
@@ -17,10 +18,12 @@ import java.util.List;
 public class OfferDocument {
     @Id
     private String id;
+
     private String name;
     private String tag;
     private List<String> restaurants;
-    public String get_id(){
+
+    public String get_id() {
         return id;
     }
 }

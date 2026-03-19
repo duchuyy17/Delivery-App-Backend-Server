@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("auth_data")
 @AllArgsConstructor
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AuthDataDocument {
     @Id
     private String id;
+
     private String userId;
     private String token;
     private String password;
@@ -26,7 +28,8 @@ public class AuthDataDocument {
     private String phone;
     private Boolean isNewUser;
     private Boolean isActive;
-    public String get_id(){
+
+    public String get_id() {
         return id;
     }
 }

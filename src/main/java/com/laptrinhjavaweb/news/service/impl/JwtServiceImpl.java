@@ -1,26 +1,30 @@
 package com.laptrinhjavaweb.news.service.impl;
 
-import com.laptrinhjavaweb.news.mongo.RiderDocument;
-import com.laptrinhjavaweb.news.service.JwtService;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.laptrinhjavaweb.news.mongo.RiderDocument;
+import com.laptrinhjavaweb.news.service.JwtService;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
     private final HttpServletRequest request;
+
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
 
@@ -43,15 +47,16 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(Object authData) {
-        if(authData instanceof RiderDocument) {
+        if (authData instanceof RiderDocument) {
             RiderDocument user = (RiderDocument) authData;
             JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
             JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                     .subject(user.getUsername())
                     .issuer("deliveryApp.com")
                     .issueTime(new Date())
-                    .expirationTime(new Date(
-                            Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                    .expirationTime(new Date(Instant.now()
+                            .plus(VALID_DURATION, ChronoUnit.SECONDS)
+                            .toEpochMilli()))
                     .jwtID(UUID.randomUUID().toString())
                     .claim(
                             "refreshToken",
@@ -60,7 +65,7 @@ public class JwtServiceImpl implements JwtService {
                                     .toEpochMilli()))
                     .claim("scope", "ROLE_" + "RIDER")
                     .claim("userId", user.getId())
-                    .claim("email",user.getUsername())
+                    .claim("email", user.getUsername())
                     .build();
             Payload payload = new Payload(jwtClaimsSet.toJSONObject());
             JWSObject jwsObject = new JWSObject(jwsHeader, payload);

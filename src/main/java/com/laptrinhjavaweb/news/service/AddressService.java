@@ -5,5 +5,6 @@ import com.laptrinhjavaweb.news.mongo.UserDocument;
 
 public interface AddressService {
     UserDocument createAddress(String userId, AddressInput addressInput);
-    UserDocument selectAddress(String userId,String addressId);
+
+    UserDocument selectAddress(String userId, String addressId);
 }

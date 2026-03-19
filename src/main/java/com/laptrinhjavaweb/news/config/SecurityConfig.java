@@ -3,7 +3,6 @@ package com.laptrinhjavaweb.news.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +27,14 @@ import com.laptrinhjavaweb.news.exception.ErrorCode;
 public class SecurityConfig {
 
     private final String[] PUBLIC_URLS = {
-        "/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh", "/graphql"
+        "/users",
+        "/auth/token",
+        "/auth/introspect",
+        "/auth/logout",
+        "/auth/refresh",
+        "/graphiql/**",
+        "/graphql",
+        "/traffic-factor","/new"
     };
 
     @Autowired
@@ -37,7 +43,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests(requests -> requests.requestMatchers(HttpMethod.POST, PUBLIC_URLS)
+                .authorizeHttpRequests(requests -> requests.requestMatchers(PUBLIC_URLS)
                         .permitAll()
                         .anyRequest()
                         .authenticated())

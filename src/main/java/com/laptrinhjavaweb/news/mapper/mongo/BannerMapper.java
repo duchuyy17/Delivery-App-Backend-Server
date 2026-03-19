@@ -1,10 +1,10 @@
 package com.laptrinhjavaweb.news.mapper.mongo;
 
-import com.laptrinhjavaweb.news.dto.request.mongo.BannerInput;
-import com.laptrinhjavaweb.news.mongo.BannerDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
+import com.laptrinhjavaweb.news.dto.request.mongo.BannerInput;
+import com.laptrinhjavaweb.news.mongo.BannerDocument;
 
 @Mapper(componentModel = "spring")
 public interface BannerMapper {

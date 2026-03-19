@@ -2,12 +2,11 @@ package com.laptrinhjavaweb.news.service;
 
 import java.util.List;
 
-import com.laptrinhjavaweb.news.dto.data.AuthData;
-import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
-import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import org.springframework.data.domain.PageRequest;
 
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.request.mongo.*;
+import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.UpdateRestaurantResponse;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
 
@@ -33,7 +32,14 @@ public interface RestaurantService {
     List<RestaurantDocument> getAllRestaurant();
 
     List<RestaurantDocument> findNearbyRestaurants(double longitude, double latitude, double radiusKm);
+
     List<RestaurantPreview> findNearByLocation(double longitude, double latitude, String shopType);
+
     List<RestaurantPreview> getMostOrderedRestaurants(Double latitude, Double longitude);
+
+    List<RestaurantPreview> topRatedVendors(double latitude, double longitude);
+
     AuthData login(String username, String password);
+
+    RestaurantDocument updateCommission(String id, Double commissionRate);
 }

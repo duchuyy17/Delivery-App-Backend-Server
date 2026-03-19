@@ -3,16 +3,18 @@ package com.laptrinhjavaweb.news.graphql;
 import java.text.ParseException;
 import java.util.List;
 
-import com.laptrinhjavaweb.news.dto.data.AuthData;
-import com.laptrinhjavaweb.news.mongo.OrderDocument;
-import com.laptrinhjavaweb.news.service.JwtService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.request.mongo.RiderInput;
+import com.laptrinhjavaweb.news.mongo.OrderDocument;
 import com.laptrinhjavaweb.news.mongo.RiderDocument;
+import com.laptrinhjavaweb.news.publisher.RiderLocationPublisher;
+import com.laptrinhjavaweb.news.service.JwtService;
 import com.laptrinhjavaweb.news.service.RiderService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,10 @@ import lombok.RequiredArgsConstructor;
 public class RiderGraphQlController {
     private final RiderService riderService;
     private final JwtService jwtService;
+    private final RiderLocationPublisher publisher;
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<RiderDocument> riders() {
         return riderService.getAllRiders();
     }
@@ -40,8 +44,8 @@ public class RiderGraphQlController {
 
     @QueryMapping
     public RiderDocument rider(@Argument String id) {
-       RiderDocument riderDocument =  riderService.getRiderById(id);
-       riderDocument.setActive(true);
+        RiderDocument riderDocument = riderService.getRiderById(id);
+        riderDocument.setActive(true);
 
         return riderDocument;
     }
@@ -56,8 +60,7 @@ public class RiderGraphQlController {
             @Argument String username,
             @Argument String password,
             @Argument String notificationToken,
-            @Argument String timeZone
-    ) {
+            @Argument String timeZone) {
         RiderInput req = new RiderInput();
         req.setUsername(username);
         req.setPassword(password);
@@ -72,9 +75,17 @@ public class RiderGraphQlController {
         String riderId = jwtService.getCurrentUserId();
         return riderService.riderOrders(riderId);
     }
+
     @MutationMapping
-    public RiderDocument updateRiderLocation(@Argument String latitude,
-                                             @Argument String longitude) throws ParseException {
-        return riderService.updateRiderLocation(latitude, longitude);
+    public RiderDocument updateRiderLocation(@Argument String latitude, @Argument String longitude)
+            throws ParseException {
+        RiderDocument riderSaved = riderService.updateRiderLocation(latitude, longitude);
+        publisher.publish(riderSaved);
+        return riderSaved;
+    }
+
+    @QueryMapping
+    public double getRiderAvgDeliveryTime(@Argument String riderId) {
+        return riderService.getAvgSpeed(riderId);
     }
 }

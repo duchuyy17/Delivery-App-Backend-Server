@@ -1,25 +1,26 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.dto.request.mongo.BannerInput;
 import com.laptrinhjavaweb.news.mapper.mongo.BannerMapper;
 import com.laptrinhjavaweb.news.mongo.BannerDocument;
-import com.laptrinhjavaweb.news.repository.mongo.BannerRepository;
+import com.laptrinhjavaweb.news.repository.BannerRepository;
 import com.laptrinhjavaweb.news.service.BannerService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
     private final BannerMapper bannerMapper;
+
     @Override
     public List<BannerDocument> getAllBanners() {
-        return  bannerRepository.findAll();
+        return bannerRepository.findAll();
     }
 
     @Override
@@ -37,9 +38,10 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public BannerDocument editBanner(BannerInput bannerInput) {
-        BannerDocument banner = bannerRepository.findById(bannerInput.get_id())
+        BannerDocument banner = bannerRepository
+                .findById(bannerInput.get_id())
                 .orElseThrow(() -> new RuntimeException("Banner not found"));
-        bannerMapper.updateBanner(bannerInput,banner);
+        bannerMapper.updateBanner(bannerInput, banner);
         return bannerRepository.save(banner);
     }
 }

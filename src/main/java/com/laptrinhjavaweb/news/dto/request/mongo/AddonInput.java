@@ -1,8 +1,8 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class AddonInput {
@@ -13,7 +13,8 @@ public class AddonInput {
     private Integer quantityMaximum;
     private Integer quantityMinimum;
     private List<String> options;
-    public String getId(){
+
+    public String getId() {
         return _id;
     }
 }

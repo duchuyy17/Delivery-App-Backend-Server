@@ -32,7 +32,7 @@ public class ConfigurationDocument {
     private String secretKey;
     private String currency;
     private String currencySymbol;
-    private double deliveryRate;
+    private Double deliveryRate;
     private String costType;
 
     // ======= TWILIO (SMS) CONFIG =======

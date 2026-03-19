@@ -69,7 +69,7 @@ extend type Mutation {
     createVendor(vendorInput: VendorInput): Owner
     createStaff(staffInput : StaffInput) : Owner
     editStaff(staffInput: StaffInput!): Owner
-    ownerLogin(email: String!, password: String!): OwnerLoginResponse
+    ownerLogin(email: String!, password: String!,recaptchaToken :String!): OwnerLoginResponse
     editVendor(vendorInput: VendorInput): Owner
 }
 extend type Query {

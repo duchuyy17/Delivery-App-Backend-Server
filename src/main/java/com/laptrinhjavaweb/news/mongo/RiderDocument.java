@@ -3,6 +3,7 @@ package com.laptrinhjavaweb.news.mongo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.Decimal128;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.laptrinhjavaweb.news.dto.data.BussinessDetails;
 import com.laptrinhjavaweb.news.dto.data.LicenseDetails;
 import com.laptrinhjavaweb.news.dto.data.VehicleDetails;
+import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
 
 import lombok.*;
 
@@ -47,13 +49,20 @@ public class RiderDocument {
     private String notificationToken;
     private String timeZone;
 
-    private Integer currentWalletAmount = 0;
+    private Decimal128 currentWalletAmount;
 
-    private Integer totalWalletAmount = 0;
+    private Decimal128 totalWalletAmount;
 
-    private Integer withdrawnWalletAmount = 0;
+    private Decimal128 withdrawnWalletAmount;
 
     public String get_id() {
         return id;
+    }
+
+    public LocationResponse getLocation() {
+        if (location == null) {
+            return null;
+        }
+        return new LocationResponse(location);
     }
 }

@@ -1,14 +1,15 @@
 package com.laptrinhjavaweb.news.mongo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "foods")
 @Builder
@@ -18,25 +19,27 @@ import java.util.List;
 public class FoodDocument {
     @Id
     private String id;
+
     private String title;
     private String description;
     private String restaurant;
     private String subCategory;
+
     @DBRef(lazy = true)
     private List<VariationDocument> variations;
+
     private String image;
     private boolean isActive;
     private boolean isOutOfStock;
 
-    public String get_id(){
+    public String get_id() {
         return id;
     }
 
-    public String getDescription(){
-        if(description == null){
+    public String getDescription() {
+        if (description == null) {
             return "";
         }
         return description;
     }
-
 }

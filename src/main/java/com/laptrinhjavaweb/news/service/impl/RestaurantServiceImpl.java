@@ -1,23 +1,13 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.laptrinhjavaweb.news.constant.RestaurantTypeConstant;
-import com.laptrinhjavaweb.news.dto.data.AuthData;
-import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
-import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
-import com.laptrinhjavaweb.news.mongo.*;
-import com.laptrinhjavaweb.news.repository.mongo.FoodRepository;
-import com.laptrinhjavaweb.news.service.JwtService;
-import com.laptrinhjavaweb.news.service.RestaurantService;
-import com.laptrinhjavaweb.news.service.ZoneService;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
+import org.bson.types.Decimal128;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.geo.Distance;
@@ -31,17 +21,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.laptrinhjavaweb.news.constant.DeliveryConstant;
 import com.laptrinhjavaweb.news.constant.UserTypeConstant;
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.data.BussinessDetails;
 import com.laptrinhjavaweb.news.dto.data.OpeningTimes;
 import com.laptrinhjavaweb.news.dto.data.Timings;
 import com.laptrinhjavaweb.news.dto.request.mongo.*;
+import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.UpdateRestaurantResponse;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mapper.mongo.RestaurantMapper;
-import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
+import com.laptrinhjavaweb.news.mongo.*;
+import com.laptrinhjavaweb.news.repository.CuisineRepository;
+import com.laptrinhjavaweb.news.repository.FoodRepository;
+import com.laptrinhjavaweb.news.repository.OwnerRepository;
+import com.laptrinhjavaweb.news.repository.RestaurantRepository;
+import com.laptrinhjavaweb.news.service.RestaurantService;
+import com.laptrinhjavaweb.news.service.ZoneService;
 import com.laptrinhjavaweb.news.util.UniqueIdUtil;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,6 +55,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final PasswordEncoder passwordEncoder;
     private final FoodRepository foodRepository;
     private final RestaurantTagService restaurantTagService;
+    private final CuisineRepository cuisineRepository;
+
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
 
@@ -83,8 +85,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         Long nextId = restaurantRepository.count() + 1;
         restaurant.setOrderId(nextId);
         restaurant.setOrderPrefix(UniqueIdUtil.generateOrderPrefix());
-        restaurant.setTax(restaurantInput.getSalesTax());
+        restaurant.setTax(new Decimal128(restaurantInput.getSalesTax()));
         restaurant.setOrderId(1L);
+        restaurant.setCreatedAt(new Date());
         restaurant.setIsAvailable(true);
         restaurant.setActive(restaurantInput.isActive());
         restaurant.setSections(List.of("66b44629329c70266a0269d2"));
@@ -285,26 +288,29 @@ public class RestaurantServiceImpl implements RestaurantService {
         Point point = new Point(longitude, latitude);
         Distance distance = new Distance(radiusKm, Metrics.KILOMETERS);
         return restaurantRepository.findByLocationNear(point, distance);
-
     }
 
     @Override
     public List<RestaurantPreview> findNearByLocation(double longitude, double latitude, String shopType) {
         Point point = new Point(longitude, latitude);
-        Distance distance = new Distance(100, Metrics.KILOMETERS);
+        Distance distance = new Distance(10, Metrics.KILOMETERS);
         List<RestaurantDocument> restaurantDocuments = restaurantRepository.findByLocationNear(point, distance);
         if (shopType != null) {
             restaurantDocuments = restaurantDocuments.stream()
-                    .filter(restaurantDocument -> restaurantDocument.getShopType().equals(shopType))
+                    .filter(restaurantDocument ->
+                            restaurantDocument.getShopType().equals(shopType))
                     .toList();
         }
-        return restaurantDocuments.stream().map(
-                restaurantDocument -> {
+        return restaurantDocuments.stream()
+                .map(restaurantDocument -> {
                     RestaurantPreview restaurantPreview = restaurantMapper.toRestaurantPreview(restaurantDocument);
                     restaurantPreview.setIsAvailable(true);
+                    List<CuisineDocument> cuisineDocuments =
+                            cuisineRepository.findAllByNameIn(restaurantDocument.getCuisines());
+                    restaurantPreview.setCuisines(cuisineDocuments);
                     return restaurantPreview;
-                }
-        ).toList();
+                })
+                .toList();
     }
 
     @Override
@@ -313,20 +319,28 @@ public class RestaurantServiceImpl implements RestaurantService {
         Distance distance = new Distance(100, Metrics.KILOMETERS);
         List<RestaurantDocument> restaurantDocuments = restaurantRepository.findByLocationNear(point, distance);
 
-        return restaurantDocuments.stream().map(
-                restaurantDocument -> {
+        return restaurantDocuments.stream()
+                .map(restaurantDocument -> {
                     RestaurantPreview restaurantPreview = restaurantMapper.toRestaurantPreview(restaurantDocument);
                     restaurantPreview.setIsAvailable(true);
+                    List<CuisineDocument> cuisineDocuments =
+                            cuisineRepository.findAllByNameIn(restaurantDocument.getCuisines());
+                    restaurantPreview.setCuisines(cuisineDocuments);
                     return restaurantPreview;
-                }
-        ).toList();
+                })
+                .toList();
+    }
+
+    @Override
+    public List<RestaurantPreview> topRatedVendors(double latitude, double longitude) {
+        return List.of();
     }
 
     @Override
     public AuthData login(String username, String password) {
-        RestaurantDocument user =
-                restaurantRepository.findByUsername(username).orElseThrow(
-                        () -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
+        RestaurantDocument user = restaurantRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
         boolean authenticated = password.equals(user.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHETICATED);
@@ -334,12 +348,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         var token = generateToken(user);
 
-        return AuthData.builder()
-                .restaurantId(user.getId())
-                .token(token)
-                .build();
+        return AuthData.builder().restaurantId(user.getId()).token(token).build();
     }
 
+    @Override
+    public RestaurantDocument updateCommission(String id, Double commissionRate) {
+        RestaurantDocument restaurant =
+                restaurantRepository.findById(id).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        restaurant.setCommissionRate(new Decimal128(BigDecimal.valueOf(commissionRate)));
+        return restaurantRepository.save(restaurant);
+    }
 
     private boolean isPointInsidePolygon(GeoJsonPoint point, GeoJsonPolygon polygon) {
         double x = point.getX();
@@ -359,68 +377,66 @@ public class RestaurantServiceImpl implements RestaurantService {
         return inside;
     }
 
-//    private void generateTagsAndKeywords(RestaurantDocument restaurant){
-//        Set<String> tags = new LinkedHashSet<>();
-//        Set<String> keywords = new LinkedHashSet<>();
-//        // 1️⃣ Thêm tên nhà hàng vào keywords
-//        if (restaurant.getName() != null) {
-//            keywords.add(restaurant.getName());
-//        }
-//        // 2️⃣ Lặp qua toàn bộ categories
-//        for (CategoryDocument category : restaurant.getCategories()) {
-//
-//            // TAG = category title
-//            if (category.getTitle() != null) {
-//                tags.add(category.getTitle());
-//                keywords.add(category.getTitle());
-//            }
-//
-//            // 3️⃣ SubCategories → keywords
-//            if (category.getSubCategories() != null) {
-//                category.getSubCategories().forEach(sub -> {
-//                    if (sub.getTitle() != null) {
-//                        keywords.add(sub.getTitle());
-//                    }
-//                });
-//            }
-//
-//            // 4️⃣ Foods → keywords
-//            if (category.getFoods() != null) {
-//                category.getFoods().forEach(food -> {
-//
-//                    if (food.getTitle() != null) {
-//                        keywords.add(food.getTitle());
-//                    }
-//
-//                    // 5️⃣ Variations → keywords
-//                    if (food.getVariations() != null) {
-//                        food.getVariations().forEach(variation -> {
-//                            if (variation.getTitle() != null) {
-//                                keywords.add(variation.getTitle());
-//                            }
-//                        });
-//                    }
-//                });
-//            }
-//        }
-//        // 6️⃣ Addons → keywords
-//        if (restaurant.getAddons() != null) {
-//            restaurant.getAddons().forEach(addon -> {
-//                if (addon.getTitle() != null) {
-//                    keywords.add(addon.getTitle());
-//                }
-//            });
-//        }
-//        // 7️⃣ Options → keywords
-//        if (restaurant.getOptions() != null) {
-//            restaurant.getOptions().forEach(opt -> keywords.add(opt.getTitle()));
-//        }
-//        // 8️⃣ Gán về document
-//        restaurant.setTags(new ArrayList<>(tags));
-//        restaurant.setKeywords(new ArrayList<>(keywords));
-//    }
-
-
+    //    private void generateTagsAndKeywords(RestaurantDocument restaurant){
+    //        Set<String> tags = new LinkedHashSet<>();
+    //        Set<String> keywords = new LinkedHashSet<>();
+    //        // 1️⃣ Thêm tên nhà hàng vào keywords
+    //        if (restaurant.getName() != null) {
+    //            keywords.add(restaurant.getName());
+    //        }
+    //        // 2️⃣ Lặp qua toàn bộ categories
+    //        for (CategoryDocument category : restaurant.getCategories()) {
+    //
+    //            // TAG = category title
+    //            if (category.getTitle() != null) {
+    //                tags.add(category.getTitle());
+    //                keywords.add(category.getTitle());
+    //            }
+    //
+    //            // 3️⃣ SubCategories → keywords
+    //            if (category.getSubCategories() != null) {
+    //                category.getSubCategories().forEach(sub -> {
+    //                    if (sub.getTitle() != null) {
+    //                        keywords.add(sub.getTitle());
+    //                    }
+    //                });
+    //            }
+    //
+    //            // 4️⃣ Foods → keywords
+    //            if (category.getFoods() != null) {
+    //                category.getFoods().forEach(food -> {
+    //
+    //                    if (food.getTitle() != null) {
+    //                        keywords.add(food.getTitle());
+    //                    }
+    //
+    //                    // 5️⃣ Variations → keywords
+    //                    if (food.getVariations() != null) {
+    //                        food.getVariations().forEach(variation -> {
+    //                            if (variation.getTitle() != null) {
+    //                                keywords.add(variation.getTitle());
+    //                            }
+    //                        });
+    //                    }
+    //                });
+    //            }
+    //        }
+    //        // 6️⃣ Addons → keywords
+    //        if (restaurant.getAddons() != null) {
+    //            restaurant.getAddons().forEach(addon -> {
+    //                if (addon.getTitle() != null) {
+    //                    keywords.add(addon.getTitle());
+    //                }
+    //            });
+    //        }
+    //        // 7️⃣ Options → keywords
+    //        if (restaurant.getOptions() != null) {
+    //            restaurant.getOptions().forEach(opt -> keywords.add(opt.getTitle()));
+    //        }
+    //        // 8️⃣ Gán về document
+    //        restaurant.setTags(new ArrayList<>(tags));
+    //        restaurant.setKeywords(new ArrayList<>(keywords));
+    //    }
 
     private String generateToken(RestaurantDocument user) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
@@ -438,7 +454,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                                 .toEpochMilli()))
                 .claim("scope", "ROLE_" + "STORE")
                 .claim("restaurantId", user.getId())
-                .claim("email",user.getUsername())
+                .claim("email", user.getUsername())
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(jwsHeader, payload);
@@ -449,5 +465,4 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new RuntimeException(e);
         }
     }
-
 }

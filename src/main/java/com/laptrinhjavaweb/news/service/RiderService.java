@@ -24,4 +24,8 @@ public interface RiderService {
     List<OrderDocument> riderOrders(String riderId);
 
     RiderDocument updateRiderLocation(String latitude, String longitude) throws ParseException;
+
+    double getAvgSpeed(String riderId);
+
+    void clearOffers(String riderId);
 }

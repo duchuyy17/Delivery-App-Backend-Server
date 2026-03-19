@@ -1,18 +1,21 @@
 package com.laptrinhjavaweb.news.service.impl;
 
-import com.laptrinhjavaweb.news.dto.data.Otp;
-import com.laptrinhjavaweb.news.dto.data.VerifyOtp;
-import lombok.RequiredArgsConstructor;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import com.laptrinhjavaweb.news.dto.data.Otp;
+import com.laptrinhjavaweb.news.dto.data.VerifyOtp;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OtpService {
     private final StringRedisTemplate redisTemplate;
+
     public Otp sendOtpToPhoneNumber(String phone) {
         String otp = String.format("%06d", new Random().nextInt(999999));
 

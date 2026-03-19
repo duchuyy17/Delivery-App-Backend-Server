@@ -1,17 +1,19 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.dto.request.mongo.CreateAddonInput;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.AddonDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
-import com.laptrinhjavaweb.news.repository.mongo.AddonRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
+import com.laptrinhjavaweb.news.repository.AddonRepository;
+import com.laptrinhjavaweb.news.repository.RestaurantRepository;
 import com.laptrinhjavaweb.news.service.AddonService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,11 @@ public class AddonServiceImpl implements AddonService {
 
     @Override
     public RestaurantDocument createAddons(CreateAddonInput createAddonInput) {
-        RestaurantDocument restaurantDocument = restaurantRepository.findById(createAddonInput.getRestaurant())
+        RestaurantDocument restaurantDocument = restaurantRepository
+                .findById(createAddonInput.getRestaurant())
                 .orElseThrow(() -> new AppException(ErrorCode.RESTAURANT_NOT_EXISTED));
-        List<AddonDocument> addonSaved =  createAddonInput.getAddons().stream().map(
-                addonInput -> {
+        List<AddonDocument> addonSaved = createAddonInput.getAddons().stream()
+                .map(addonInput -> {
                     AddonDocument addonDocument = AddonDocument.builder()
                             .title(addonInput.getTitle())
                             .description(addonInput.getDescription())
@@ -34,15 +37,17 @@ public class AddonServiceImpl implements AddonService {
                             .options(addonInput.getOptions())
                             .build();
                     return addonRepository.save(addonDocument);
-        }).toList();
+                })
+                .toList();
 
-        if (restaurantDocument.getAddons() == null || restaurantDocument.getAddons().isEmpty()) {
+        if (restaurantDocument.getAddons() == null
+                || restaurantDocument.getAddons().isEmpty()) {
             restaurantDocument.setAddons(addonSaved);
         } else {
             restaurantDocument.getAddons().addAll(addonSaved);
         }
         RestaurantDocument restaurantSaved = restaurantRepository.save(restaurantDocument);
         restaurantTagService.updateKeywordAndTag(restaurantSaved.getId());
-       return restaurantSaved;
+        return restaurantSaved;
     }
 }

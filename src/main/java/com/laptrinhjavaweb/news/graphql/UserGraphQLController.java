@@ -4,14 +4,15 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.laptrinhjavaweb.news.dto.request.mongo.UserInput;
-import com.laptrinhjavaweb.news.mongo.AuthDataDocument;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import com.laptrinhjavaweb.news.dto.request.mongo.CoordinatesInput;
+import com.laptrinhjavaweb.news.dto.request.mongo.UserInput;
+import com.laptrinhjavaweb.news.mongo.AuthDataDocument;
+import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
 import com.laptrinhjavaweb.news.mongo.UserDocument;
 import com.laptrinhjavaweb.news.service.UserServiceV1;
 
@@ -54,19 +55,20 @@ public class UserGraphQLController {
     public UserDocument user(@Argument("id") String id) {
         return userService.getUserById(id);
     }
+
     @MutationMapping
-    UserDocument emailExist(@Argument String email){
+    UserDocument emailExist(@Argument String email) {
         return userService.emailExist(email);
     }
 
     @MutationMapping
-    UserDocument phoneExist(@Argument String phone){
+    UserDocument phoneExist(@Argument String phone) {
         return userService.phoneExist(phone);
     }
 
     @MutationMapping
     public UserDocument updateUser(@Argument UserInput updateUserInput) throws ParseException {
-        return userService.updateUser( updateUserInput);
+        return userService.updateUser(updateUserInput);
     }
 
     @QueryMapping
@@ -74,4 +76,14 @@ public class UserGraphQLController {
         return userService.getProfile();
     }
 
+    @QueryMapping
+    public List<RestaurantDocument> userFavourite(@Argument Float latitude, @Argument Float longitude)
+            throws ParseException {
+        return userService.getUserFavouriteRestaurants(latitude, longitude);
+    }
+
+    @MutationMapping
+    public UserDocument addFavourite(@Argument("id") String restaurantId) throws ParseException {
+        return userService.addFavouriteRestaurant(restaurantId);
+    }
 }

@@ -1,13 +1,15 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class OrderItemDocument {
     private String description;
     private Integer quantity;
     private String image;
-    
+
     private VariationDocument variation;
     private List<AddonDocument> addons;
     private String specialInstructions;
@@ -28,7 +30,7 @@ public class OrderItemDocument {
     private Date createdAt;
     private Date updatedAt;
 
-    public String get_id(){
+    public String get_id() {
         return id;
     }
 }

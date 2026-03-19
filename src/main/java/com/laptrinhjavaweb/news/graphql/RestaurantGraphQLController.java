@@ -3,20 +3,18 @@ package com.laptrinhjavaweb.news.graphql;
 import java.util.Collections;
 import java.util.List;
 
-
-import com.laptrinhjavaweb.news.dto.data.AuthData;
-import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
-import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
-import com.laptrinhjavaweb.news.mongo.SectionInfoDocument;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import com.laptrinhjavaweb.news.dto.data.AuthData;
 import com.laptrinhjavaweb.news.dto.data.CircleBounds;
 import com.laptrinhjavaweb.news.dto.request.mongo.*;
+import com.laptrinhjavaweb.news.dto.response.mongo.NearByRestaurantsPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPaginationResponse;
+import com.laptrinhjavaweb.news.dto.response.mongo.RestaurantPreview;
 import com.laptrinhjavaweb.news.dto.response.mongo.UpdateRestaurantResponse;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
 import com.laptrinhjavaweb.news.service.RestaurantService;
@@ -98,56 +96,62 @@ public class RestaurantGraphQLController {
     public RestaurantDocument updateTimings(@Argument String id, @Argument List<TimingsInput> openingTimes) {
         return restaurantService.updateTimings(id, openingTimes);
     }
+
     @QueryMapping
     public List<RestaurantDocument> restaurants() {
         return restaurantService.getAllRestaurant();
     }
+
     @QueryMapping
     public List<RestaurantDocument> nearbyRestaurants(
-            @Argument double longitude,
-            @Argument double latitude,
-            @Argument double radiusKm) {
+            @Argument double longitude, @Argument double latitude, @Argument double radiusKm) {
         return restaurantService.findNearbyRestaurants(longitude, latitude, radiusKm);
     }
+
     @QueryMapping
     public NearByRestaurantsPreview nearByRestaurantsPreview(
-            @Argument Double latitude,
-            @Argument Double longitude,
-            @Argument String shopType
-    ) {
-        List<RestaurantPreview> restaurantPreviews =   restaurantService.findNearByLocation(longitude, latitude, shopType);
-//        SectionInfoDocument section = SectionInfoDocument.builder()
-//                .id("66b44629329c70266a0269d2")
-//                .name("add section")
-//                .restaurants(List.of("691162a52978894ec43f20a3"))
-//                .build();
+            @Argument Double latitude, @Argument Double longitude, @Argument String shopType) {
+        List<RestaurantPreview> restaurantPreviews =
+                restaurantService.findNearByLocation(longitude, latitude, shopType);
+        //        SectionInfoDocument section = SectionInfoDocument.builder()
+        //                .id("66b44629329c70266a0269d2")
+        //                .name("add section")
+        //                .restaurants(List.of("691162a52978894ec43f20a3"))
+        //                .build();
         return NearByRestaurantsPreview.builder()
                 .offers(Collections.emptyList())
                 .sections(Collections.emptyList())
                 .restaurants(restaurantPreviews)
                 .build();
     }
+
     @QueryMapping
     public List<RestaurantPreview> mostOrderedRestaurantsPreview(
-            @Argument Double latitude,
-            @Argument Double longitude
-    ) {
+            @Argument Double latitude, @Argument Double longitude) {
         return restaurantService.getMostOrderedRestaurants(latitude, longitude);
     }
 
+    // sai logic
     @QueryMapping
     public List<RestaurantPreview> recentOrderRestaurantsPreview(
-            @Argument Double latitude,
-            @Argument Double longitude
-    ) {
+            @Argument Double latitude, @Argument Double longitude) {
+        return restaurantService.getMostOrderedRestaurants(latitude, longitude);
+    }
+    // sai logic
+    @QueryMapping
+    public List<RestaurantPreview> topRatedVendorsPreview(@Argument Double latitude, @Argument Double longitude) {
         return restaurantService.getMostOrderedRestaurants(latitude, longitude);
     }
 
     @MutationMapping
-    public AuthData restaurantLogin(@Argument String username,
-                                    @Argument String password,
-                                    @Argument String notificationToken) {
-        return restaurantService.login(username,password);
+    public AuthData restaurantLogin(
+            @Argument String username, @Argument String password, @Argument String notificationToken) {
+        return restaurantService.login(username, password);
     }
 
+    @MutationMapping
+    public RestaurantDocument updateCommission(@Argument String id, @Argument Double commissionRate) {
+
+        return restaurantService.updateCommission(id, commissionRate);
+    }
 }

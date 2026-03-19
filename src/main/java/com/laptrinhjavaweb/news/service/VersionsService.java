@@ -1,7 +1,8 @@
 package com.laptrinhjavaweb.news.service;
 
-import com.laptrinhjavaweb.news.dto.data.VersionsDTO;
 import org.springframework.stereotype.Service;
+
+import com.laptrinhjavaweb.news.dto.data.VersionsDTO;
 
 @Service
 public class VersionsService {

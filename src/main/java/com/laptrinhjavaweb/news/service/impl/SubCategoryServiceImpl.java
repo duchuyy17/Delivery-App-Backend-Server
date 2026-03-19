@@ -1,24 +1,27 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.dto.request.mongo.SubCategoryInput;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.CategoryDocument;
 import com.laptrinhjavaweb.news.mongo.SubCategoryDocument;
-import com.laptrinhjavaweb.news.repository.mongo.CategoryRepository;
-import com.laptrinhjavaweb.news.repository.mongo.SubCategoryRepository;
+import com.laptrinhjavaweb.news.repository.CategoryRepository;
+import com.laptrinhjavaweb.news.repository.SubCategoryRepository;
 import com.laptrinhjavaweb.news.service.SubCategoryService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class SubCategoryServiceImpl implements SubCategoryService {
     private final SubCategoryRepository subCategoryRepository;
     private final CategoryRepository categoryRepository;
+
     @Override
     public List<SubCategoryDocument> findByParentCategoryId(String parentCategoryId) {
         return subCategoryRepository.findByParentCategoryId(parentCategoryId);
@@ -27,7 +30,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     @Override
     public void createSubCategories(List<SubCategoryInput> subCategories) {
         // 1️⃣ Lấy CategoryDocument cha
-        CategoryDocument categoryDocument = categoryRepository.findById(subCategories.getFirst().getParentCategoryId())
+        CategoryDocument categoryDocument = categoryRepository
+                .findById(subCategories.getFirst().getParentCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 2️⃣ Tạo danh sách SubCategoryDocument mới
@@ -56,8 +60,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public String deleteSubCategory(String id) {
-        SubCategoryDocument subCategory = subCategoryRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.SUBCATEGORY_NOT_FOUND));
+        SubCategoryDocument subCategory =
+                subCategoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SUBCATEGORY_NOT_FOUND));
         // Xóa subcategory ra khỏi Category cha (nếu có)
         if (subCategory.getParentCategoryId() != null) {
             categoryRepository.findById(subCategory.getParentCategoryId()).ifPresent(category -> {
@@ -77,5 +81,4 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public List<SubCategoryDocument> getAllSubCategories() {
         return subCategoryRepository.findAll();
     }
-
 }

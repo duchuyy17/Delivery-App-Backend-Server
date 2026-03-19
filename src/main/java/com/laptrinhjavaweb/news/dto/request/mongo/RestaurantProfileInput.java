@@ -1,5 +1,6 @@
 package com.laptrinhjavaweb.news.dto.request.mongo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Data;
@@ -16,11 +17,11 @@ public class RestaurantProfileInput {
     private String phone;
     private String address;
     private int deliveryTime;
-    private int minimumOrder;
+    private Integer minimumOrder;
     private boolean isActive;
-    private double commissionRate;
-    private double tax;
-    private double salesTax;
+    private BigDecimal commissionRate;
+    private BigDecimal tax;
+    private BigDecimal salesTax;
     private String shopType;
     private int orderId;
     private String logo;
@@ -31,7 +32,7 @@ public class RestaurantProfileInput {
         return _id != null ? _id : id;
     }
 
-    public double getTax() {
+    public BigDecimal getTax() {
         return salesTax;
     }
 }

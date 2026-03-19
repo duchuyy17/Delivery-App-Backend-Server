@@ -1,10 +1,12 @@
 package com.laptrinhjavaweb.news.mongo;
-import lombok.*;
 
+import java.util.List;
+
+import org.bson.types.Decimal128;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
@@ -16,12 +18,14 @@ import java.util.List;
 public class VariationDocument {
     @Id
     private String id;
+
     private String title;
-    private Float price;
-    private Float discounted;
+    private Decimal128 price;
+    private Decimal128 discounted;
     private List<String> addons;
     private boolean isOutOfStock;
-    public String get_id(){
+
+    public String get_id() {
         return id;
     }
 }

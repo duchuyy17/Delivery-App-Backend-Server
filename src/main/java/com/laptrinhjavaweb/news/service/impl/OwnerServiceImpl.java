@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import com.laptrinhjavaweb.news.service.AuthenticationService;
-import com.laptrinhjavaweb.news.service.OwnerService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +24,9 @@ import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mapper.mongo.UserMapperV1;
 import com.laptrinhjavaweb.news.mapper.mongo.VendorMapper;
 import com.laptrinhjavaweb.news.mongo.OwnerDocument;
-import com.laptrinhjavaweb.news.repository.mongo.OwnerRepository;
+import com.laptrinhjavaweb.news.repository.OwnerRepository;
+import com.laptrinhjavaweb.news.service.AuthenticationService;
+import com.laptrinhjavaweb.news.service.OwnerService;
 import com.laptrinhjavaweb.news.util.UniqueIdUtil;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -61,8 +61,7 @@ public class OwnerServiceImpl implements OwnerService, AuthenticationService<Own
         }
 
         var token = generateToken(user);
-
-        return OwnerDocument.builder()
+        OwnerDocument ownerDocument = OwnerDocument.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
@@ -74,6 +73,8 @@ public class OwnerServiceImpl implements OwnerService, AuthenticationService<Own
                 .restaurants(user.getRestaurants())
                 .permissions(user.getPermissions())
                 .build();
+        ownerDocument.setUserId(user.getId());
+        return ownerDocument;
     }
 
     private String generateToken(OwnerDocument user) {

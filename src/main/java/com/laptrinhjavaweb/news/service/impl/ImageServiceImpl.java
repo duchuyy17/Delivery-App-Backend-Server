@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.laptrinhjavaweb.news.service.ImageService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.laptrinhjavaweb.news.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,10 +66,11 @@ public class ImageServiceImpl implements ImageService {
         // Upload lên Cloudinary
         Map uploadResult = cloudinary
                 .uploader()
-                .upload(fileBytes, ObjectUtils.asMap(
-                        "resource_type", resourceType, // có thể là "image" hoặc "video"
-                        "public_id", publicValue
-                ));
+                .upload(
+                        fileBytes,
+                        ObjectUtils.asMap(
+                                "resource_type", resourceType, // có thể là "image" hoặc "video"
+                                "public_id", publicValue));
 
         // Lấy URL trả về
         return uploadResult.get("secure_url").toString();

@@ -3,7 +3,6 @@ package com.laptrinhjavaweb.news.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.laptrinhjavaweb.news.service.ZoneService;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,8 @@ import com.laptrinhjavaweb.news.dto.request.mongo.ZoneInput;
 import com.laptrinhjavaweb.news.exception.AppException;
 import com.laptrinhjavaweb.news.exception.ErrorCode;
 import com.laptrinhjavaweb.news.mongo.ZoneDocument;
-import com.laptrinhjavaweb.news.repository.mongo.ZoneRepository;
+import com.laptrinhjavaweb.news.repository.ZoneRepository;
+import com.laptrinhjavaweb.news.service.ZoneService;
 
 import lombok.RequiredArgsConstructor;
 

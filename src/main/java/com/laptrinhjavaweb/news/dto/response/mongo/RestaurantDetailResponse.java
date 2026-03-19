@@ -11,5 +11,4 @@ public class RestaurantDetailResponse {
     private String address;
     private String image;
     private LocationResponse location;
-
 }

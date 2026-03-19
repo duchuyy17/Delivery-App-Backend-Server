@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.mongo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Builder
@@ -15,10 +16,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class SubCategoryDocument {
     @Id
     private String id;
+
     private String title;
     private String parentCategoryId;
 
-    public String get_id(){
+    public String get_id() {
         return id;
     }
 }

@@ -1,16 +1,10 @@
 package com.laptrinhjavaweb.news.mongo;
 
-import java.time.LocalDate;
 import java.util.*;
 
-import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
-import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
-import org.hibernate.query.Order;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.laptrinhjavaweb.news.dto.data.Address;
 
 import lombok.*;
 
@@ -22,6 +16,7 @@ import lombok.*;
 public class UserDocument {
     @Id
     private String id; //
+
     private String name;
     private String email;
     private String phone;
@@ -33,8 +28,10 @@ public class UserDocument {
     private Date lastLogin;
     private String note;
     private String imgUrl;
+
     @DBRef(lazy = true)
     private List<AddressDocument> addresses = new ArrayList<>();
+
     private String resetPasswordToken;
     private boolean phoneIsVerified;
     private boolean emailIsVerified;

@@ -1,7 +1,10 @@
 package com.laptrinhjavaweb.news.mongo;
-import lombok.*;
+
+import org.bson.types.Decimal128;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,11 +15,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class OptionDocument {
     @Id
     private String id;
+
     private String title;
     private String description;
-    private Double price;
+    private Decimal128 price;
 
-    public String get_id(){
+    public String get_id() {
         return id;
     }
 }

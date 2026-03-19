@@ -27,14 +27,14 @@ type Rider {
     vehicleDetails: VehicleDetails
     accountNumber : String
     createdAt : String
-    currentWalletAmount : Int
+    currentWalletAmount : Float
     email : String
     image : String
     isActive : Boolean
     location :LocationResponse
-    totalWalletAmount : Int
+    totalWalletAmount : Float
     updatedAt : String
-    withdrawnWalletAmount : Int
+    withdrawnWalletAmount : Float
     timeZone : String
     workSchedule : [DaySchedule]
 
@@ -67,8 +67,9 @@ type VehicleDetails {
 
 extend type Query {
     riders: [Rider]
-    rider(id: String!): Rider
+    rider(id: String): Rider
     riderOrders : [Order]
+    getRiderAvgDeliveryTime(riderId : String) : Float
 }
 extend type Mutation {
     createRider(riderInput: RiderInput!): Rider

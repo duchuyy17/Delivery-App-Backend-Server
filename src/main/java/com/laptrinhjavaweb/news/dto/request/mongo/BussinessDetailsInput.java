@@ -10,7 +10,7 @@ public class BussinessDetailsInput {
     private Object accountNumber;
     private Object bussinessRegNo;
     private Object companyRegNo;
-    private Float taxRate;
+    private Double taxRate;
 
     public String getAccountName() {
         return convertToString(accountName);

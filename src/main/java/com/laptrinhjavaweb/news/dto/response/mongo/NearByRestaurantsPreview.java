@@ -1,11 +1,12 @@
 package com.laptrinhjavaweb.news.dto.response.mongo;
 
+import java.util.List;
+
 import com.laptrinhjavaweb.news.mongo.OfferDocument;
 import com.laptrinhjavaweb.news.mongo.SectionInfoDocument;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Builder

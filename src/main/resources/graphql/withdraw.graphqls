@@ -1,0 +1,39 @@
+enum UserTypeEnum {
+    RIDER
+    STORE
+    ADMIN
+}
+
+input PaginationInput {
+    pageSize: Int!
+    pageNo: Int!
+}
+
+extend type Query {
+    withdrawRequests(
+        userType: UserTypeEnum
+        userId: String
+        pagination: PaginationInput!
+        search: String
+    ): WithdrawRequestResponse
+}
+
+type WithdrawRequestResponse {
+    message: String
+    pagination: PaginationInfo
+    data: [WithdrawRequest]
+    success: Boolean
+}
+type PaginationInfo {
+    total: Int
+}
+type WithdrawRequest {
+    _id: ID
+    requestId: String
+    requestAmount: Float
+    requestTime: String
+    status: String
+    createdAt: String
+    rider: Rider
+    store: Restaurant
+}

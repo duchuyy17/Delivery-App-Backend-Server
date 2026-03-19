@@ -1,13 +1,16 @@
 package com.laptrinhjavaweb.news.dto.response.mongo;
 
-import com.laptrinhjavaweb.news.dto.data.OpeningTimes;
-import com.laptrinhjavaweb.news.dto.data.Point;
-import com.laptrinhjavaweb.news.dto.request.mongo.PointInput;
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bson.types.Decimal128;
+
+import com.laptrinhjavaweb.news.dto.data.OpeningTimes;
+import com.laptrinhjavaweb.news.dto.data.Point;
+import com.laptrinhjavaweb.news.mongo.CuisineDocument;
+
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @Builder
@@ -18,23 +21,24 @@ public class RestaurantPreview {
     private String orderPrefix;
     private String name;
     private String image;
+    private String logo;
     private String address;
     private String username;
     private String password;
     private Integer deliveryTime;
-    private Float minimumOrder;
+    private Integer minimumOrder;
     private List<String> sections = new ArrayList<>();
     private Float rating;
     private Boolean isActive;
     private Boolean isAvailable;
     private String slug;
     private Boolean stripeDetailsSubmitted;
-    private Float commissionRate;
-    private Float tax;
+    private Decimal128 commissionRate;
+    private Decimal128 tax;
     private String notificationToken;
     private Boolean enableNotification;
     private String shopType;
-    private List<String> cuisines = new ArrayList<>();
+    private List<CuisineDocument> cuisines = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     private Integer reviewCount;
@@ -42,8 +46,8 @@ public class RestaurantPreview {
     private Point location;
     private List<OpeningTimes> openingTimes = new ArrayList<>();
     private GeoJsonPolygonResponse deliveryBounds;
-    public String get_id(){
+
+    public String get_id() {
         return id;
     }
-
 }

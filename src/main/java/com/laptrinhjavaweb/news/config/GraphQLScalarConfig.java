@@ -3,6 +3,7 @@ package com.laptrinhjavaweb.news.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
+
 import graphql.scalars.ExtendedScalars;
 
 @Configuration

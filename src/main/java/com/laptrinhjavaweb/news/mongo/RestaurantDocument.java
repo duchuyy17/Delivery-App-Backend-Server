@@ -1,10 +1,10 @@
 package com.laptrinhjavaweb.news.mongo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.laptrinhjavaweb.news.dto.data.*;
-import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
+import org.bson.types.Decimal128;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
@@ -13,7 +13,9 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.laptrinhjavaweb.news.dto.data.*;
 import com.laptrinhjavaweb.news.dto.response.mongo.GeoJsonPolygonResponse;
+import com.laptrinhjavaweb.news.dto.response.mongo.LocationResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +38,7 @@ public class RestaurantDocument {
     private Integer deliveryTime;
     private Integer minimumOrder;
     private boolean isActive;
-    private Integer commissionRate;
+    private Decimal128 commissionRate;
     private String username;
     private String password;
     private String phone;
@@ -45,7 +47,7 @@ public class RestaurantDocument {
     private String uniqueRestaurantId;
     private String slug;
     private String city;
-    private Double tax;
+    private Decimal128 tax;
 
     @DBRef(lazy = true)
     private OwnerDocument owner;
@@ -73,19 +75,20 @@ public class RestaurantDocument {
     private String boundType;
     private List<String> sections = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
-    private List <String> tags = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
     private List<OpeningTimes> openingTimes = new ArrayList<>();
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint location;
 
     private BussinessDetails bussinessDetails;
-    private Float currentWalletAmount;
-    private Float totalWalletAmount;
-    private Float withdrawnWalletAmount;
+    private Decimal128 currentWalletAmount;
+    private Decimal128 totalWalletAmount;
+    private Decimal128 withdrawnWalletAmount;
     private Boolean stripeDetailsSubmitted;
     private Boolean enableNotification;
     private Boolean isAvailable;
+    private Date createdAt;
 
     public String get_id() {
         return id;
@@ -95,20 +98,17 @@ public class RestaurantDocument {
         return uniqueRestaurantId;
     }
 
-
-
     public GeoJsonPolygonResponse getdeliveryBounds() {
         if (deliveryBounds == null) {
             return null;
         }
         return new GeoJsonPolygonResponse(deliveryBounds);
     }
+
     public LocationResponse getLocation() {
         if (location == null) {
             return null;
         }
         return new LocationResponse(location);
     }
-
-
 }

@@ -1,5 +1,11 @@
 package com.laptrinhjavaweb.news.service.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.springframework.stereotype.Service;
+
 import com.laptrinhjavaweb.news.dto.request.mongo.CategoryInput;
 import com.laptrinhjavaweb.news.dto.response.mongo.CategoryDetailsResponseForMobile;
 import com.laptrinhjavaweb.news.exception.AppException;
@@ -8,17 +14,13 @@ import com.laptrinhjavaweb.news.mongo.CategoryDocument;
 import com.laptrinhjavaweb.news.mongo.FoodDocument;
 import com.laptrinhjavaweb.news.mongo.RestaurantDocument;
 import com.laptrinhjavaweb.news.mongo.SubCategoryDocument;
-import com.laptrinhjavaweb.news.repository.mongo.CategoryRepository;
-import com.laptrinhjavaweb.news.repository.mongo.RestaurantRepository;
-import com.laptrinhjavaweb.news.repository.mongo.SubCategoryRepository;
+import com.laptrinhjavaweb.news.repository.CategoryRepository;
+import com.laptrinhjavaweb.news.repository.RestaurantRepository;
+import com.laptrinhjavaweb.news.repository.SubCategoryRepository;
 import com.laptrinhjavaweb.news.service.CategoryService;
 import com.laptrinhjavaweb.news.service.RestaurantService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -65,13 +67,13 @@ public class CategoryServiceImpl implements CategoryService {
         RestaurantDocument restaurantSaved = restaurantRepository.save(restaurantDocument);
         restaurantTagService.updateKeywordAndTag(input.getRestaurant());
         return restaurantSaved;
-
     }
 
     @Override
     public RestaurantDocument editCategory(CategoryInput input) {
         // Tìm Category cần cập nhật
-        CategoryDocument category = categoryRepository.findById(input.getId())
+        CategoryDocument category = categoryRepository
+                .findById(input.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         // Cập nhật dữ liệu cơ bản
         category.setTitle(input.getTitle());
@@ -86,7 +88,8 @@ public class CategoryServiceImpl implements CategoryService {
 
                         // Nếu subcategory đã tồn tại → cập nhật
                         if (subInput.getId() != null && !subInput.getId().isEmpty()) {
-                            subCategoryDoc = subCategoryRepository.findById(subInput.getId())
+                            subCategoryDoc = subCategoryRepository
+                                    .findById(subInput.getId())
                                     .orElse(SubCategoryDocument.builder()
                                             .title(subInput.getTitle())
                                             .parentCategoryId(input.getId())
@@ -120,30 +123,34 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDetailsResponseForMobile> fetchCategoryDetailsByStoreIdForMobile(String storeId) {
         RestaurantDocument restaurantDocument = restaurantService.findById(storeId);
-        List<CategoryDocument> categoryDocuments = categoryRepository.findByRestaurant(restaurantDocument)
+        List<CategoryDocument> categoryDocuments = categoryRepository
+                .findByRestaurant(restaurantDocument)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-        List<CategoryDetailsResponseForMobile> categoryDetailsResponseForMobiles = categoryDocuments.stream().map(categoryDocument -> {
-            CategoryDetailsResponseForMobile response = new CategoryDetailsResponseForMobile();
-            response.setId(categoryDocument.getId());
-            response.setCategory_name(categoryDocument.getTitle());
+        List<CategoryDetailsResponseForMobile> categoryDetailsResponseForMobiles = categoryDocuments.stream()
+                .map(categoryDocument -> {
+                    CategoryDetailsResponseForMobile response = new CategoryDetailsResponseForMobile();
+                    response.setId(categoryDocument.getId());
+                    response.setCategory_name(categoryDocument.getTitle());
 
-            // Lấy food (an toàn)
-            FoodDocument food = null;
-            if (categoryDocument.getFoods() != null && !categoryDocument.getFoods().isEmpty()) {
-                food = categoryDocument.getFoods().getFirst();
-                response.setFood_id(food.getId());
-            } else {
-                response.setFood_id(null); // hoặc "" tùy bạn
-            }
+                    // Lấy food (an toàn)
+                    FoodDocument food = null;
+                    if (categoryDocument.getFoods() != null
+                            && !categoryDocument.getFoods().isEmpty()) {
+                        food = categoryDocument.getFoods().getFirst();
+                        response.setFood_id(food.getId());
+                    } else {
+                        response.setFood_id(null); // hoặc "" tùy bạn
+                    }
 
-            if(categoryDocument.getImage() == null){
-                if(food == null){
-                    response.setUrl("");
-                }
-                response.setUrl(food.getImage());
-            }else response.setUrl(categoryDocument.getImage());
-            return response;
-        }).toList();
+                    if (categoryDocument.getImage() == null) {
+                        if (food == null) {
+                            response.setUrl("");
+                        }
+                        response.setUrl(food.getImage());
+                    } else response.setUrl(categoryDocument.getImage());
+                    return response;
+                })
+                .toList();
         return categoryDetailsResponseForMobiles;
     }
 }

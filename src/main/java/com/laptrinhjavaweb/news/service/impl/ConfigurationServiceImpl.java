@@ -1,10 +1,10 @@
 package com.laptrinhjavaweb.news.service.impl;
 
-import com.laptrinhjavaweb.news.service.ConfigurationService;
 import org.springframework.stereotype.Service;
 
 import com.laptrinhjavaweb.news.mongo.ConfigurationDocument;
-import com.laptrinhjavaweb.news.repository.mongo.ConfigurationRepository;
+import com.laptrinhjavaweb.news.repository.ConfigurationRepository;
+import com.laptrinhjavaweb.news.service.ConfigurationService;
 
 import lombok.RequiredArgsConstructor;
 

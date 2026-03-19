@@ -8,7 +8,8 @@ public class SubCategoryInput {
     private String id;
     private String title;
     private String parentCategoryId;
-    public String getId(){
+
+    public String getId() {
         return _id;
     }
 }
